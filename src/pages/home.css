@@ -1,0 +1,23 @@
+.whole{
+    display: flex;
+    height:100%;
+    width:100%;
+    gap:6.5%;
+}
+.side1{
+   width:18%;
+   height:100vh;
+   border: 1px solid black;
+}
+.side2{
+   width: 45%;
+   height:100vh;
+   overflow-y: scroll;
+   border: 1px solid red;
+   scrollbar-width: none;
+}
+.side3{
+    width:25%;
+    height:40vh;
+    border: 1px solid blue;
+}
