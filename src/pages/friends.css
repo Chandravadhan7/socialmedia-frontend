@@ -1,0 +1,51 @@
+.friend-cont{
+    width:100%;
+    height:88.5vh;
+    border: 1px solid black;
+    display: flex;
+}
+.friend-cont-side1{
+    width:23%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0.5% 0 0.5%;
+}
+.friend-cont-side2{
+    width:73%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 2% 1% 0 3%;
+    overflow: scroll;
+    scrollbar-width: none;
+}
+.friend-cont-side21{
+    min-height:50px;
+    border: 1px solid green;
+}
+.friend-cont-side22{
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid red;
+  gap:3rem;
+}
+.friend-cont-side1-child{
+    width: 99%;
+    height: 4rem;
+    border: 1px solid red;
+    display: flex;
+    padding: 0 0.5% 0 0.5%;
+}
+.f-c-s1-c-icon{
+   width:18%;
+   border: 1px solid red;
+}
+.f-c-s1-c-text{
+   width: 69%;
+   border: 1px solid red;
+}
+.f-c-s1-c-arrow{
+   width: 12%;
+   border: 1px solid red;
+}
