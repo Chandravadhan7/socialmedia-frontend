@@ -1,0 +1,30 @@
+.suggestion{
+    width:100%;
+    height:70px;
+    border:2px solid black;
+    display: flex;
+}
+.sugg-pic-cont{
+    width:20%;
+    border: 1px solid yellow;
+}
+.sugg-pic{
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+}
+.sugg-name{
+    width:55%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+}
+.sugg-add{
+    width:25%;
+    border: 1px solid green;
+    display: flex;
+    align-items: center;
+}
+.sugg-add button{
+    height: 40%;
+}

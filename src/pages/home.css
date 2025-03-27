@@ -8,8 +8,37 @@
 }
 .side2{
    width:22%;
-   height:40vh;
+   height:52vh;
    border: 1px solid black;
+   display: flex;
+   flex-direction: column;
+}
+.side21{
+  width:95%;
+  height: 13%;
+  padding: 4% 3% 3% 2%;
+  border: 1px solid blue;
+  font-size: 160%;
+  text-align: left;
+  font-weight: bold;
+}
+.side22{
+    width:100%;
+    height: 76%;
+    border: 1px solid blue;
+    overflow: hidden;
+}
+.side23{
+    height:4%;
+    border: 1px solid violet;
+    display: flex;
+    justify-content: center;
+}
+.side23 button{
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: blue;
 }
 .side1{
    width: 35%;

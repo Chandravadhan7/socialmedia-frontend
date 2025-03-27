@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./home.css";
 import Post from "../components/post/post";
+import Suggestion from "../components/suggestion/suggestion";
 
 export default function Home() {
     const [file, setFile] = useState(null);
@@ -10,6 +11,12 @@ export default function Home() {
     const [feeling, setFeeling] = useState(""); 
     const [location, setLocation] = useState(""); 
     const [posts,setPosts] = useState([]);
+    const [suggestion,setSuggestions] = useState([]);
+    const [buttonState,setButtonState] = useState("see more");
+
+    const toggleHeight = () => {
+        setButtonState(buttonState === "see less" ? "see more" : "see less");
+    };
 
     const sessionId = localStorage.getItem("sessionId");
     const userId = localStorage.getItem("userId");
@@ -105,6 +112,28 @@ export default function Home() {
         console.log("Updated Posts State:", posts);
     }, [posts]); 
     
+    const getSuggestions = async () =>{
+        const response = await fetch("http://localhost:8080/friendship/suggestions",{
+            method:"GET",
+            headers:{
+                sessionId: sessionId,
+                userId: userId
+            }
+        })
+
+        if(!response.ok){
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const suggested = await response.json();
+        setSuggestions(suggested);
+
+        console.log("suggestions", suggested);
+    }
+
+    useEffect(() => {
+        getSuggestions();
+    },[])
 
     return (
         <div className="whole">
@@ -168,8 +197,20 @@ export default function Home() {
                     })}
                 </div>
             </div>
-            <div className="side2">
-                {/* Optional sidebar content */}
+            <div className="side2" style={buttonState === "see less"?{height:"100vh",overflow:"scroll",scrollbarWidth:"none"}:{}}>
+                <div className="side21">
+                  Suggested for you ✨
+                </div>
+                <div className="side22">
+                  {suggestion.map((item) => {
+                    return(
+                        <Suggestion suggestedItem={item}/>
+                    )
+                  })}
+                </div>
+                <div className="side23">
+                    <button onClick={toggleHeight}>{buttonState === "see more" ? "see more" : "see less"}</button>
+                </div>
             </div>
         </div>
     );
