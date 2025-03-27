@@ -5,42 +5,6 @@ export default function Suggestion({suggestedItem}){
     const userId = localStorage.getItem("userId");
     const [friendRequests, setFriendRequests] = useState({});
 
-    // const handleFriendRequest = async (userId2) => {
-    //     if (!userId2) {
-    //         console.error("User ID is undefined");
-    //         return;
-    //     }
-    
-    //     const isRequestSent = friendRequests[userId2] || false;
-    //     const url = isRequestSent
-    //         ? `http://localhost:8080/friendship/cancelrequest/${userId2}`
-    //         : `http://localhost:8080/friendship/friendrequest/${userId2}`;
-    
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: isRequestSent ? "DELETE" : "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 sessionId: sessionId,
-    //                 userId: userId, // This is now sent in headers
-    //             },
-    //         });
-    
-    //         if (!response.ok) {
-    //             throw new Error(`HTTP error! Status: ${response.status}`);
-    //         }
-    
-    //         setFriendRequests((prevRequests) => ({
-    //             ...prevRequests,
-    //             [userId2]: !isRequestSent,
-    //         }));
-    
-    //         console.log(isRequestSent ? "Friend request canceled" : "Friend request sent");
-    //     } catch (error) {
-    //         console.error("Error handling friend request:", error);
-    //     }
-    // };
-    
     useEffect(() => {
         const fetchPendingRequests = async () => {
             const response = await fetch("http://localhost:8080/friendship/pending-requests", {
@@ -55,7 +19,6 @@ export default function Suggestion({suggestedItem}){
     
             const pendingRequests = await response.json();
     
-            // Convert pending requests into a state object { userId1: true, userId2: true }
             const requestMap = {};
             pendingRequests.forEach((id) => requestMap[id] = true);
             setFriendRequests(requestMap);
