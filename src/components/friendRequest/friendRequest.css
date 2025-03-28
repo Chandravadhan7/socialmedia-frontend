@@ -1,0 +1,29 @@
+.request{
+    width:100%;
+    height:70px;
+    border:2px solid black;
+    display: flex;
+}
+.req-pic-cont{
+    width:20%;
+    border: 1px solid yellow;
+}
+.req-pic{
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+}
+.req-name-btns{
+    width:80%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+}
+.req-name{
+    height: 50%;
+    border: 1px solid yellow;
+}
+.req-btns{
+    height: 50%;
+    border: 1px solid orange;
+}

@@ -1,0 +1,45 @@
+.profil-cont{
+    display: flex;
+    flex-direction: column;
+}
+.cover-pro{
+    height:25rem;
+    border: 1px solid black;
+}
+.pro-username{
+    height: 7rem;
+    border: 1px solid blue;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+.entities{
+    height: 4rem;
+    border: 1px solid red;
+    margin-left: 6%;
+    margin-right: 6%;
+}
+.user-contents{
+    height:50rem;
+    border: 1px solid orange;
+    margin-left: 6%;
+    margin-right: 6%;
+    overflow: scroll;
+    scrollbar-width: none;
+    display: flex;
+    gap:3%;
+}
+.user-info{
+   width:37%;
+   height:40%;
+   border: 1px solid red;
+}
+.user-posts{
+    width:59%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    flex-grow: 1; 
+    scrollbar-width: none; 
+    gap:14px;
+}
