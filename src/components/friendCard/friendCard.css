@@ -1,0 +1,21 @@
+.AFri{
+    width:100%;
+    height:70px;
+    border:2px solid black;
+    display: flex;
+}
+.Afri-pic-cont{
+    width:20%;
+    border: 1px solid yellow;
+}
+.Afri-pic{
+    width:100%;
+    height: 100%;
+    object-fit: contain;
+}
+.Afri-name{
+    width:80%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+}
