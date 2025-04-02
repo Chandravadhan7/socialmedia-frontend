@@ -3,11 +3,13 @@ import "./post.css";
 import { formatDistanceToNowStrict } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikes } from "../../pages/fetchLikes";
-
+import Comment from "../comments/comment";
 export default function Post({ postItem }) {
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
   const [comments, setCommments] = useState([]);
+  const [comment,setComment] = useState('');
+
   const [showComments, setShowComments] = useState(false); // New state for toggling comments
 
   const getRelativeTime = (epoch) => {
@@ -101,6 +103,26 @@ export default function Post({ postItem }) {
     getComments();
   }, []);
 
+  const addComment = async () =>{
+    let inputobj = {content:comment}
+    const response = await fetch(`http://localhost:8080/comments/postcomment?postId=${postId}`,{
+        method:"POST",
+        headers: {
+            "Content-Type": "application/json",
+            userId: userId,
+            sessionId: sessionId,
+        },
+        body:JSON.stringify(inputobj)
+    });
+    if(!response.ok){
+        throw new Error("commenting on post is failed")
+    }
+    
+    const commentResponse = await response.json();
+
+    console.log("comment message", commentResponse);
+  }
+
   return (
     <div className="whole-cont">
       <div
@@ -155,7 +177,21 @@ export default function Post({ postItem }) {
       {showComments && (
         <div className="comments">
           <div className="comment-child">
-            {/* Render comments content here */}
+            {comments.map((item)=>{
+                return(
+                    <Comment comment={item} key={item.commentId} />
+                )
+            })}
+          </div>
+          <div className="add-comment">
+            <div className="pic-cont"></div>
+            <input placeholder="write a comment" onChange={(e)=>setComment(e.target.value)} value={comment} className="comment-bar"/>
+            <button onClick={() => { 
+            addComment(); 
+            setTimeout(() => {
+            window.location.reload();
+            }, 500);
+            }}>Post</button>
           </div>
         </div>
       )}
