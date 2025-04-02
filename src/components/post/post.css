@@ -1,10 +1,15 @@
+.whole-cont{
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
 .post-cont {
     width: 93.5%;
     border: 1px solid black;
     display: flex;
     flex-direction: column;
     flex-grow: 1; 
-    min-height: 500px; 
+    min-height: 600px; 
     padding: 2% 3% 2% 3%;
 }
 .post-pro{
@@ -64,6 +69,16 @@
 .post-comment{
     width:33%;
     border: 1px solid green;
+}
+.comments{
+    height: 250px;
+    border: 1px solid green;
+    display: flex;
+    flex-direction: column;
+}
+.comment-child{
+    height:75%;
+    border: 1px solid blue;
 }
 .post-share{
     width:33%;
