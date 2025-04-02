@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./friends.css"
 import FriendRequestCard from "../components/friendRequestCard/friendrequestCard";
 import SuggestionCard from "../components/suggestionCard/suggestionCard";
@@ -58,22 +59,22 @@ export default function Friends(){
                 <div className="friend-cont-side1-child" style={{textAlign:"left",fontSize:"180%",lineHeight:"200%"}}>Friends</div>
                 <div className="friend-cont-side1-child">
                     <div className="f-c-s1-c-icon"></div>
-                    <div className="f-c-s1-c-text">Home</div>
+                    <Link to="/friends" className="f-c-s1-c-text">Home</Link>
                     <div className="f-c-s1-c-arrow"></div>
                 </div>
                 <div className="friend-cont-side1-child">
                     <div className="f-c-s1-c-icon"></div>
-                    <div className="f-c-s1-c-text">Friend Requests</div>
+                    <Link to="/friendrequest"className="f-c-s1-c-text">Friend Requests</Link>
                     <div className="f-c-s1-c-arrow"></div>
                 </div>
                 <div className="friend-cont-side1-child">
                     <div className="f-c-s1-c-icon"></div>
-                    <div className="f-c-s1-c-text">Suggestions</div>
+                    <Link to="/suggestions" className="f-c-s1-c-text">Suggestions</Link>
                     <div className="f-c-s1-c-arrow"></div>
                 </div>
                 <div className="friend-cont-side1-child">
                     <div className="f-c-s1-c-icon"></div>
-                    <div className="f-c-s1-c-text">All Frineds</div>
+                    <Link to="/friends/list" className="f-c-s1-c-text">All Friends</Link>
                     <div className="f-c-s1-c-arrow"></div>
                 </div>
             </div>
