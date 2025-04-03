@@ -23,7 +23,7 @@
     display: flex;
     flex-direction: column;
     border: 1px solid blue;
-    flex-grow: 1; /* Allow it to grow */
+    flex-grow: 1; 
     gap: 3%;
     height: auto;
 }
@@ -61,4 +61,50 @@
     height: auto; /* Allows it to expand */
     min-height: 10px;
     border: 1px solid black;
+    display: flex;
+    gap:2%;
+}
+.com-time{
+    font-size: 70%;
+}
+.com-like{
+    font-size: 80%;
+}
+.com-reply{
+    font-size: 80%;
+}
+.reply-section{
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+.reply-child{
+    height:75%;
+    border: 1px solid blue;
+    overflow: scroll;
+    display: flex;
+    flex-direction: column ;
+    gap: 6%;
+    scrollbar-width: none;
+    margin-left: 5%;
+}
+.add-reply{
+    border: 1px solid yellow;
+    display: flex;
+    gap:3%;
+    align-items: center;
+    margin-left: 5%;
+    height: 70px;
+}
+.reply-pic-cont{
+    width:10%;
+    height: 100%;
+    border: 1px solid black;
+}
+.reply-bar{
+    width:75%;
+    height: 80%;
+}
+.reply-btn{
+    width:10%;
 }
