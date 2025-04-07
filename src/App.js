@@ -8,6 +8,7 @@ import FriendRequestPage from './pages/friendRequestPage';
 import SuggestionsPage from './pages/suggestionsPage';
 import AllFriends from './pages/AllFriends';
 import UserProfile from './pages/userprofile';
+import Conversations from './pages/conversations';
 
 export default function App(){
   return(
@@ -21,6 +22,7 @@ export default function App(){
         <Route path="/suggestions" element={<SuggestionsPage/>}/>
         <Route path="/friends/list" element={<AllFriends/>}/>
         {/* <Route path="profile/:userId" element={<UserProfile/>}/> */}
+        <Route path="/chats" element={<Conversations/>}/>
        </Routes>
 
     </div>

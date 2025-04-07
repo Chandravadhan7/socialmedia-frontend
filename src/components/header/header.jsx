@@ -15,7 +15,7 @@ export default function Header(){
               <div className="header12">
                 <HomeOutlinedIcon style={{fontSize:"200%"}}/>
                 <Link to="/friends"><PeopleAltOutlinedIcon style={{fontSize:"200%"}}/></Link>
-                <ChatBubbleOutlineOutlinedIcon style={{fontSize:"200%"}}/>
+                <Link to="/chats"><ChatBubbleOutlineOutlinedIcon style={{fontSize:"200%"}}/></Link>
                 <NotificationsNoneOutlinedIcon style={{fontSize:"200%"}}/>
               </div>
             </div>
