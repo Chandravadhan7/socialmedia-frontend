@@ -1,0 +1,12 @@
+.convo-page-side2-convo-msg {
+    min-height: 60px;
+    height: fit-content;
+    max-width: 50%;
+    width: fit-content;
+    border: 1px solid blue;
+    text-align: left;
+    word-wrap: break-word;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #e1ffc7; /* Default for user */
+}
