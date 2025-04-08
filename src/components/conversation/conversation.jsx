@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 
-export default function Conversation({conversationId}){
+export default function Conversation({conversationId,onClick}){
     const [participants,setParticipants] = useState('');
     const sessionId = localStorage.getItem("sessionId");
-    const userId = localStorage.getItem("userId");
+    const userId = Number(localStorage.getItem("userId"));
 
     const [otherUserId, setOtherUserId] = useState(null);
 
@@ -36,7 +36,7 @@ export default function Conversation({conversationId}){
     },[])
 
     return(
-        <div>
+        <div onClick={onClick}>
            {otherUserId}
         </div>
     )
