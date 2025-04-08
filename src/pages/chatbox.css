@@ -1,0 +1,39 @@
+.convo-page-side2{
+    width: 74%;
+    border: 1px solid blue;
+    display: flex;
+    flex-direction: column;
+}
+.convo-page-side2-user{
+    height:12%;
+    min-height: 83px;
+    border: 1px solid blue;
+}
+.convo-page-side2-convo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align children to the left */
+    height: 75.5%;
+    border: 1px solid yellow;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    gap:2%;
+}
+.convo-page-side2-search{
+    height:10%;
+    min-height: 72px;
+    border: 1px solid blue;
+    display: flex;
+}
+.convo-page-side2-search1{
+   width:10%;
+   border: 1px solid black;
+}
+.convo-page-side2-search2{
+    width:75%;
+    border: 1px solid black;
+}
+.convo-page-side2-search3{
+    width:15%;
+    border: 1px solid black;
+}
