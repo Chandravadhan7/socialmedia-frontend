@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import "./conversation.css"
 import Conversation from "../components/conversation/conversation";
+import ChatBox from "./chatbox";
 export default function Conversations(){
     let [conversations,setconversations] = useState([]);
     const sessionId = localStorage.getItem("sessionId");
     const userId = localStorage.getItem("userId");
+    let [selectedUserId,setSelectedUserId] = useState(null);
+    let [selectedConversationId,setSelectedConversationId] = useState(null);
 
     const getConversations = async () =>{
         const response = await fetch("http://localhost:8080/conversations",{
@@ -34,16 +37,12 @@ export default function Conversations(){
             </div>
             <div className="convo-page-side1-chats">
               {conversations.map((item) => (
-              <Conversation key={item?.conversationId} conversationId={item?.conversationId} />
+              <Conversation key={item?.conversationId} conversationId={item?.conversationId} onClick={() => setSelectedConversationId(item?.conversationId)}/>
             ))}
             </div>
             
            </div>
-           <div className="convo-page-side2">
-            <div className="convo-page-side2-user"></div>
-            <div className="convo-page-side2-convo"></div>
-            <div className="convo-page-side2-search"></div>
-           </div>
+          {selectedConversationId && <ChatBox conversationId={selectedConversationId}/>}
         </div>
     )
 }
