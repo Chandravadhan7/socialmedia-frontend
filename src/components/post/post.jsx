@@ -4,28 +4,30 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikes } from "../../pages/fetchLikes";
 import Comment from "../comments/comment";
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
+import ShareIcon from '@mui/icons-material/Share';
 export default function Post({ postItem }) {
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
   const [comments, setCommments] = useState([]);
-  const [comment,setComment] = useState('');
-
-  const [showComments, setShowComments] = useState(false); // New state for toggling comments
-
-  const getRelativeTime = (epoch) => {
-    return formatDistanceToNowStrict(new Date(epoch), { addSuffix: true });
-  };
+  const [comment, setComment] = useState("");
+  const [showComments, setShowComments] = useState(false);
+  const [userDetails,setUserDetails] = useState(null);
 
   const dispatch = useDispatch();
   const postId = postItem?.postId;
   const likes = useSelector((state) => state.likes);
 
-  // Get likes data on component mount
+  const getRelativeTime = (epoch) => {
+    return formatDistanceToNowStrict(new Date(epoch), { addSuffix: true });
+  };
+
   useEffect(() => {
     dispatch(fetchLikes());
   }, [dispatch]);
 
-  // Call fetchLikes again when user clicks "like"
   const handleLike = async () => {
     try {
       const response = await fetch(
@@ -35,7 +37,7 @@ export default function Post({ postItem }) {
           headers: {
             "Content-Type": "application/json",
             userId: userId,
-            sessionId: sessionId, // Send the userId as a header
+            sessionId: sessionId,
           },
         }
       );
@@ -43,8 +45,7 @@ export default function Post({ postItem }) {
         throw new Error(`Failed to like post. Status: ${response.status}`);
       }
       const result = await response.text();
-      console.log(result); // Expected: "you liked post"
-      // Optionally update likes state after liking
+      console.log(result);
       dispatch(fetchLikes());
     } catch (error) {
       console.error("Error liking post:", error);
@@ -60,7 +61,7 @@ export default function Post({ postItem }) {
           headers: {
             "Content-Type": "application/json",
             userId: userId,
-            sessionId: sessionId, // Send the userId as a header
+            sessionId: sessionId,
           },
         }
       );
@@ -68,7 +69,6 @@ export default function Post({ postItem }) {
         throw new Error(`Failed to dislike post. Status: ${response.status}`);
       }
       console.log("Post disliked");
-      // Optionally update likes state after disliking
       dispatch(fetchLikes());
     } catch (error) {
       console.error("Error disliking post:", error);
@@ -103,95 +103,135 @@ export default function Post({ postItem }) {
     getComments();
   }, []);
 
-  const addComment = async () =>{
-    let inputobj = {content:comment}
-    const response = await fetch(`http://localhost:8080/comments/postcomment?postId=${postId}`,{
-        method:"POST",
+  const addComment = async () => {
+    let inputobj = { content: comment };
+    const response = await fetch(
+      `http://localhost:8080/comments/postcomment?postId=${postId}`,
+      {
+        method: "POST",
         headers: {
-            "Content-Type": "application/json",
-            userId: userId,
-            sessionId: sessionId,
+          "Content-Type": "application/json",
+          userId: userId,
+          sessionId: sessionId,
         },
-        body:JSON.stringify(inputobj)
-    });
-    if(!response.ok){
-        throw new Error("commenting on post is failed")
+        body: JSON.stringify(inputobj),
+      }
+    );
+    if (!response.ok) {
+      throw new Error("commenting on post is failed");
     }
-    
-    const commentResponse = await response.json();
 
+    const commentResponse = await response.json();
     console.log("comment message", commentResponse);
+  };
+
+  const getUser = async () => {
+      const response = await fetch(`http://localhost:8080/user/${postItem?.userId}`,{
+          method:"GET",
+          headers:{
+              sessionId:sessionId,
+              userId:userId
+          }
+      });
+
+      if(!response.ok){
+          throw new Error("failed to fetch user details");
+      }
+
+      const userResponse = await response.json();
+      setUserDetails(userResponse);
+      console.log(userResponse);
   }
+
+  useEffect(() => {
+    getUser();
+  }, [postItem?.userId]);
+
+  const hasDescription = !!postItem?.description;
 
   return (
     <div className="whole-cont">
       <div
         className="post-cont"
-        style={postItem?.description === "" ? { minHeight: "450px" } : {}}
+        style={!hasDescription ? { minHeight: "450px" } : {}}
       >
         <div
           className="post-pro"
-          style={postItem?.description === "" ? {} : { height: "15%" }}
+          style={hasDescription ? { height: "15%" } : {}}
         >
           <div className="post-pro-pic-cont">
             <img
               src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
               className="post-pro-pic"
+              alt="profile"
             />
           </div>
           <div className="post-pro-name">
-            <div className="post-pro-user-name">Harish</div>
+            <div className="post-pro-user-name">{userDetails?.name}</div>
             <div className="post-pro-name-time">
               {getRelativeTime(postItem?.createdAt)}
             </div>
           </div>
         </div>
-        <div
-          className={postItem?.description === "" ? "post-des" : ""}
-          style={postItem?.description === "" ? {} : { display: "none" }}
-        >
-          {postItem?.description}
-        </div>
+
+        {hasDescription && (
+          <div className="post-des">{postItem?.description}</div>
+        )}
+
         <div
           className="post-content"
-          style={postItem?.description === "" ? {} : { height: "80%" }}
-        ></div>
+          style={hasDescription ? { height: "80%" } : {}}
+        >
+          <img src={postItem?.imageUrl} className="post-pro-pic"/></div>
+
         <div className="post-lcs">
           <div
             className="post-like"
             onClick={liked ? handledislike : handleLike}
           >
-            {liked ? "liked" : "like"}
+            {liked ? <FavoriteIcon sx={{color:"red"}}/>: <FavoriteBorderOutlinedIcon/>}
           </div>
-          {/* Toggle comments on click */}
           <div
             className="post-comment"
             onClick={() => setShowComments(!showComments)}
           >
-            comment
+            <MapsUgcOutlinedIcon/>
           </div>
-          <div className="post-share">share</div>
+          <div className="post-share"><ShareIcon/></div>
         </div>
       </div>
-      {/* Conditionally render comments */}
+
       {showComments && (
         <div className="comments">
           <div className="comment-child">
-            {comments.map((item)=>{
-                return(
-                    <Comment comment={item} key={item.commentId} />
-                )
-            })}
+            {comments.map((item) => (
+              <Comment comment={item} key={item.commentId} />
+            ))}
           </div>
           <div className="add-comment">
-            <div className="pic-cont"></div>
-            <input placeholder="write a comment" onChange={(e)=>setComment(e.target.value)} value={comment} className="comment-bar"/>
-            <button onClick={() => { 
-            addComment(); 
-            setTimeout(() => {
-            window.location.reload();
-            }, 500);
-            }}>Post</button>
+            <div className="pic-cont">
+            <img
+              src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
+              className="post-pro-pic"
+              alt="profile"
+            />
+            </div>
+            <input
+              placeholder="write a comment"
+              onChange={(e) => setComment(e.target.value)}
+              value={comment}
+              className="comment-bar"
+            />
+            <button
+              onClick={() => {
+                addComment();
+                setTimeout(() => {
+                  window.location.reload();
+                }, 500);
+              }}
+             className="comment-btn">
+              Post
+            </button>
           </div>
         </div>
       )}
