@@ -1,22 +1,30 @@
 import "./header.css"
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import SearchIcon from '@mui/icons-material/Search';
+import { GrHomeRounded } from "react-icons/gr";
+import { FiMessageSquare } from "react-icons/fi";
+import { IoIosNotificationsOutline } from "react-icons/io";
+
+
 import { Link } from "react-router-dom";
 export default function Header(){
     return(
         <div className="header">
             <div className="header1">
               <div className="header11">
-                <div className="head-logo"></div>
-                <div className="head-search"></div>
+                <div className="head-logo">SocialHub</div>
+                <div className="head-search">
+                    <div className="search-input-wrap">
+                     <SearchIcon className="search-icon" />
+                     <input type="text" placeholder="Explore topics, people & more..." />
+                    </div>
+                </div>
               </div>
               <div className="header12">
-                <HomeOutlinedIcon style={{fontSize:"200%"}}/>
-                <Link to="/friends"><PeopleAltOutlinedIcon style={{fontSize:"200%"}}/></Link>
-                <Link to="/chats"><ChatBubbleOutlineOutlinedIcon style={{fontSize:"200%"}}/></Link>
-                <NotificationsNoneOutlinedIcon style={{fontSize:"200%"}}/>
+                <Link><GrHomeRounded style={{fontSize:"150%",color:"#fff"}}/></Link>
+                <Link to="/friends"><PeopleAltOutlinedIcon style={{fontSize:"180%",color:"#fff"}}/></Link>
+                <Link to="/chats"><FiMessageSquare style={{fontSize:"180%",color:"#fff"}}/></Link>
+                <Link><IoIosNotificationsOutline style={{fontSize:"200%",color:"#fff"}}/></Link>
               </div>
             </div>
         </div>
