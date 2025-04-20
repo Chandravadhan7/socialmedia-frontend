@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     /* border: 1px solid red; */
+    background-color: #10182a;
 }
 .cover-pro {
     position: relative;
@@ -88,12 +89,31 @@
     display: flex;
     gap:3%;
 }
-.entity{
-    /* border:1px solid white; */
+.entity {
     font-size: 120%;
     padding: 2% 1% 1% 1%;
+    color: #aaa; /* dimmed color */
+    cursor: pointer;
+    position: relative;
+  }
+  .entity:hover {
     color: #fff;
-}
+  }
+  
+  .entity.active {
+    color: #3B82F6; /* blue for active tab */
+  }
+  
+  .entity.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #3B82F6;
+    width: 100%;
+  }
 .user-contents{
     height:50rem;
     /* border: 1px solid orange; */
