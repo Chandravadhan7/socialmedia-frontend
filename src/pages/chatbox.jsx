@@ -4,9 +4,13 @@ import { useState } from "react";
 import Message from "../components/message/message";
 export default function ChatBox({conversationId}){
     let [message,setMessage] = useState('');
+    let [userDetails,setUserDetails] = useState(null);
     let [messages,setMessages] = useState([]);
     let sessionId = localStorage.getItem("sessionId");
-    let userId = Number(localStorage.getItem("userId"));    let inputobj = {
+    let userId = Number(localStorage.getItem("userId"));  
+    let [convo,setConvo] = useState(null);
+
+    let inputobj = {
     conversationId: conversationId,
     senderId: userId,
     messageType: "TEXT",
@@ -60,9 +64,109 @@ export default function ChatBox({conversationId}){
         getMessages()
     },[conversationId]);
 
+    const [otherUserId, setOtherUserId] = useState(null);
+
+    const getParticipants = async () =>{
+        const response = await fetch(`http://localhost:8080/conversation-participants/${conversationId}`,{
+            method:"GET",
+            headers:{
+              sessionId:sessionId,
+              userId:userId
+            }
+        });
+
+        if(!response.ok){
+            throw new Error("failed to fetch participants");
+        }
+
+        const participantsResponse = await response.json();
+       
+        console.log(participantsResponse);
+
+        const otherUser = participantsResponse.find(p => p.userId !== userId);
+      setOtherUserId(otherUser?.userId); // Create state for this if needed
+
+      console.log("Other participant ID:", otherUser?.userId);
+    }
+
+    useEffect(() =>{
+      getParticipants();
+    },[conversationId])
+
+    const getUser = async () => {
+        const response = await fetch(`http://localhost:8080/user/${otherUserId}`,{
+            method:"GET",
+            headers:{
+                sessionId:sessionId,
+                userId:userId
+            }
+        });
+
+        if(!response.ok){
+            throw new Error("failed to fetch user details");
+        }
+
+        const userResponse = await response.json();
+        setUserDetails(userResponse);
+        console.log(userResponse);
+    }
+
+    useEffect(() => {
+        if (otherUserId) {
+          getUser();
+        }
+      }, [otherUserId]);
+
+      const getConversation = async () => {
+        const response = await fetch(`http://localhost:8080/conversations/${conversationId}`,{
+            method:"GET",
+            headers:{
+                sessionId:sessionId,
+                userId:userId
+            }
+        })
+        if(!response.ok){
+            throw new Error("failed to fetch")
+        }
+        const convoResponse = await response.json();
+        setConvo(convoResponse);
+        console.log(convoResponse);
+      }
+      useEffect(() => {
+        getConversation()
+      },[conversationId])
+
+      const setLastSeen = async () => {
+         const response = await fetch(`http://localhost:8080/conversation-participants/last-seen/${conversationId}/${otherUserId}`,{
+            method:"PATCH",
+            headers:{
+                sessionId,
+                userId
+            }
+         })
+
+         const lastSeenResponse = await response.json();
+         console.log("last seen", lastSeenResponse)
+      }
+
+      useEffect(() => {
+        if(otherUserId){
+        setLastSeen();
+        }
+      },[conversationId,otherUserId])
+
     return(
         <div className="convo-page-side2">
-            <div className="convo-page-side2-user">{conversationId}</div>
+            <div className="convo-page-side2-user">
+                <div className="convo-page-side2-user-pic">
+                    <img src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"} className="convo-page-side2-user-pic-img"/>
+                </div>
+                <div className="convo-page-side2-user-name">
+                <div className="u-name"> {convo?.isGroup? convo?.title || "Unnamed Group" : userDetails?.name || "Unknown User"}</div>
+                    <div className="status">online</div>
+                </div>
+                <div className="convo-page-side2-user-call"></div>
+            </div>
             <div className="convo-page-side2-convo">
             {messages.map((item) =>
                <Message
@@ -77,7 +181,7 @@ export default function ChatBox({conversationId}){
             <div className="convo-page-side2-search">
                 <div className="convo-page-side2-search1"></div>
                 <div className="convo-page-side2-search2">
-                <input onChange={(e) => setMessage(e.target.value)} placeholder="type a message" value={message}/>
+                <input onChange={(e) => setMessage(e.target.value)} placeholder=" Type a message" value={message}/>
                 </div>
                 <div className="convo-page-side2-search3">
                     <button onClick={sendMessage}>send</button>
