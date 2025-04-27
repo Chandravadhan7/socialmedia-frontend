@@ -2,6 +2,8 @@ import { use, useEffect } from "react";
 import "./chatbox.css"
 import { useState } from "react";
 import Message from "../components/message/message";
+import { RxCross1 } from "react-icons/rx";
+
 export default function ChatBox({conversationId}){
     let [message,setMessage] = useState('');
     let [userDetails,setUserDetails] = useState(null);
@@ -9,7 +11,11 @@ export default function ChatBox({conversationId}){
     let sessionId = localStorage.getItem("sessionId");
     let userId = Number(localStorage.getItem("userId"));  
     let [convo,setConvo] = useState(null);
+    const [toogle,setToggle] = useState(false);
 
+    const toogleSide22 = () => {
+        setToggle(!toogle);
+    }
     let inputobj = {
     conversationId: conversationId,
     senderId: userId,
@@ -157,11 +163,12 @@ export default function ChatBox({conversationId}){
 
     return(
         <div className="convo-page-side2">
+            <div className="convo-page-side21">
             <div className="convo-page-side2-user">
-                <div className="convo-page-side2-user-pic">
+                <div className="convo-page-side2-user-pic" onClick={toogleSide22}>
                     <img src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"} className="convo-page-side2-user-pic-img"/>
                 </div>
-                <div className="convo-page-side2-user-name">
+                <div className="convo-page-side2-user-name" onClick={toogleSide22}>
                 <div className="u-name"> {convo?.isGroup? convo?.title || "Unnamed Group" : userDetails?.name || "Unknown User"}</div>
                     <div className="status">online</div>
                 </div>
@@ -187,6 +194,31 @@ export default function ChatBox({conversationId}){
                     <button onClick={sendMessage}>send</button>
                 </div>
             </div>
+            </div>
+            {toogle && (
+                <div className="convo-page-side22">
+                    <div className="convo-cont-info">
+                       <div className="convo-head">
+                          <button className="cross-btn"><RxCross1/></button>
+                          <div>User info</div>
+                       </div>
+                       <div className="convo-img-cont">
+                       <img src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"} className="convo-page-side2-user-pic-img"/>
+                       <div style={{fontSize:"180%",color:"#fff"}}>
+                            {userDetails?.name}
+                       </div>
+                       </div>
+                       
+                    </div>
+                    <div className="convo-about">
+
+                    </div>
+                    <div className="common-groups">
+                        <div className="common-groups-head">groups in common</div>
+                    </div>
+                    <div className="brd"></div>
+                </div>
+            )}
         </div>
     )
 }
