@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import FriendCard from "../components/friendCard/friendCard";
 import UserProfile from "./userprofile";
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 
+import { Link } from "react-router-dom";
 export default function AllFriends(){
     let sessionId = localStorage.getItem("sessionId");
     let userId = localStorage.getItem("userId");
@@ -35,6 +38,19 @@ export default function AllFriends(){
     return(
       <div className="friend-cont">
         <div className="friend-cont-side1">
+             <div className="friend-cont-side1-child">
+                <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
+                    <ArrowBackOutlinedIcon style={{ fontSize: "30px", marginTop: "10px", marginLeft: "10px",color:"#fff" }} />
+                </Link>
+                <div className="friend-cont-side1-child-text">All Friends</div>  
+                </div>
+                <div className="friend-search">
+                    <div className="search-input-wrapper">
+                     <SearchIcon className="search-icon" />
+                     <input type="text" placeholder="Search friends" />
+                    </div>
+                </div>
+             <div className="requests-number" style={{marginTop:"4%"}}>{friends.length}  friends</div>      
             {friends.map((item) => {
                 return(
                     <div key={item.userId} onClick={() => setSelectedUserId(item.userId)} style={{ cursor: "pointer" }}>
