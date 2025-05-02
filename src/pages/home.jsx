@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import "./home.css";
 import Post from "../components/post/post";
 import Suggestion from "../components/suggestion/suggestion";
+import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
+import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
+import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import { Link } from "react-router-dom";
 
 export default function Home() {
     const [file, setFile] = useState(null);
@@ -140,7 +145,9 @@ export default function Home() {
             <div className="side1">
                 <div className="side11">
                     <div className="thought">
-                        <div className="thought-pro"></div>
+                        <div className="thought-pro">
+                        <img src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"} className="post-pro-pic" alt="profile"/>
+                        </div>
                         <input
                             placeholder="Share your thoughts with the world..."
                             value={description}
@@ -151,8 +158,9 @@ export default function Home() {
 
                     <div className="contents">
                         {/* Photo Upload */}
-                        <label htmlFor="file-input" className="contents1">
-                            Photo
+                        <label htmlFor="file-input" className="contents1" style={{color:"#3B82F6"}}>
+                            <div><CollectionsOutlinedIcon/></div>
+                            <div>Photo</div>
                         </label>
                         <input
                             id="file-input"
@@ -163,8 +171,9 @@ export default function Home() {
                         />
 
                         {/* Video Upload */}
-                        <label htmlFor="video-input" className="contents1">
-                            🎥 Video
+                        <label htmlFor="video-input" className="contents1" style={{color:"lightgreen"}}>
+                           <div><VideocamOutlinedIcon/></div>
+                           <div>Video</div>
                         </label>
                         <input
                             id="video-input"
@@ -175,17 +184,18 @@ export default function Home() {
                         />
 
                         {/* Feeling Selection */}
-                        <div className="contents1" onClick={handleFeelingClick}>
+                        <div className="contents1" onClick={handleFeelingClick} style={{color:"orange"}}>
                             😊 Feeling
                         </div>
 
                         {/* Location Input */}
-                        <div className="contents1" onClick={handleLocationClick}>
-                            📍 Location
+                        <div className="contents1" onClick={handleLocationClick} style={{color:"purple"}}>
+                            <PlaceOutlinedIcon/>
+                            <div>Location</div>
                         </div>
 
                         <button className="share-btn" onClick={handleUpload}>
-                            Share
+                            Share post
                         </button>
                     </div>
                 </div>
@@ -204,7 +214,7 @@ export default function Home() {
                 <div className="side22">
                   {suggestion.map((item) => {
                     return(
-                        <Suggestion suggestedItem={item}/>
+                        <Link to={`/profile/${item?.userId}`} style={{textDecoration:"none"}}><Suggestion suggestedItem={item}/></Link>
                     )
                   })}
                 </div>
