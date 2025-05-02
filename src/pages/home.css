@@ -4,7 +4,8 @@
     width:100%; 
     justify-content: center;
     gap:2.5%;  
-    margin-top: 15px; 
+    padding-top: 15px; 
+    background-color: #0E1525;
 }
 .side2{
    width:22%;
@@ -12,25 +13,29 @@
    border: 1px solid black;
    display: flex;
    flex-direction: column;
+   background-color: #1F2A3C;
+   border-radius:12px;
 }
 .side21{
   width:95%;
   height: 13%;
+  max-height: 50px;
   padding: 4% 3% 3% 2%;
-  border: 1px solid blue;
   font-size: 160%;
   text-align: left;
   font-weight: bold;
+  color: #fff;
+  border-bottom: 1px solid black;
 }
 .side22{
     width:100%;
     height: 76%;
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
     overflow: hidden;
 }
 .side23{
     height:4%;
-    border: 1px solid violet;
+    /* border: 1px solid violet; */
     display: flex;
     justify-content: center;
 }
@@ -41,20 +46,24 @@
     color: blue;
 }
 .side1{
-   width: 35%;
+   width: 38%;
    height:100vh;
    /* border: 1px solid red; */
    display: flex;
    flex-direction: column;
    gap:20px;
+   overflow: scroll;
+   scrollbar-width: none; 
 }
 .side11{
     width:100%;
     height:150px;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: #1F2A3C;
+    border-radius: 12px;
+
 }
 .thought{
     height: 40%;
@@ -69,30 +78,39 @@
 }
 .thought-cont{
     width: 80%;
-    border: 1px solid pink;
+    /* border: 1px solid pink; */
     text-align: left;
     line-height: 50px;
     font-size: large;
-    background-color: rgb(244, 241, 241);
+    background-color: #213450;
+    border-radius: 12px;
+    border:none;
+    padding-left: 2%;
+    color: #fff;
 }
 .contents{
-    padding: 1% 2% 1% 2%;
+    padding: 1% 2% 1% 4%;
     display: flex;
-    gap:2%;
+    gap:1.5%;
     height:40%;
 }
 .contents1{
     width:18%;
     height: 60%;
     margin-top:2%;
+    display: flex;
+    gap:3%;
     /* border: 1px solid black; */
 }
 .share-btn{
     width:20%;
-    height: 80%;
+    height: 70%;
     margin-top:1.3%;
     border-radius: 30px;
     border: none;
+    background-color: #3B82F6;
+    color: #fff;
+    font-size: 105%;
 }
 .side12{
     width: 100%;
@@ -100,9 +118,8 @@
     /* border: 1px solid blue; */
     display: flex;
     flex-direction: column;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     flex-grow: 1; 
-    scrollbar-width: none; 
     gap:14px;
 }
 
