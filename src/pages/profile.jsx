@@ -1,19 +1,26 @@
 import { useEffect, useState } from "react";
 import "./profilepage.css";
-import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
-import VideocamOutlinedIcon from '@mui/icons-material/VideocamOutlined';
-import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import CollectionsOutlinedIcon from "@mui/icons-material/CollectionsOutlined";
+import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
+import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
+import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import Post from "../components/post/post";
 import { CiCirclePlus } from "react-icons/ci";
-import { RiFontSize } from "react-icons/ri";
+import { RiEmotionLaughFill, RiFontSize } from "react-icons/ri";
+import { SiWorkplace } from "react-icons/si";
+import { RiSchoolLine } from "react-icons/ri";
+import { LiaUniversitySolid } from "react-icons/lia";
+import { IoHomeOutline } from "react-icons/io5";
+import { CiLocationOn } from "react-icons/ci";
+import { GiRelationshipBounds } from "react-icons/gi";
+import { PiDotsThreeBold } from "react-icons/pi";
 
-export default function Profile(){
+export default function Profile() {
   const [posts, setPosts] = useState([]);
   const [file, setFile] = useState(null);
   const [content, setContent] = useState("");
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [feeling, setFeeling] = useState(""); 
+  const [feeling, setFeeling] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [userDetails, setUserDetails] = useState(null);
@@ -27,34 +34,43 @@ export default function Profile(){
   const [showHometownForm, setShowHometownForm] = useState(false);
   const [showRelationshipForm, setShowRelationshipForm] = useState(false);
   const [showGenderForm, setShowGenderForm] = useState(false);
+  const [workplace, setWorkplace] = useState("");
+  const [secondaryschool, setSecondaryschool] = useState("");
+  const [university, setUniversity] = useState("");
+  const [currentcity, setCurrentcity] = useState("");
+  const [hometown, setHometown] = useState("");
+  const [relationshipstatus, setRelationshipstatus] = useState("");
+  const [dob, setDob] = useState("");
+  const [gender, setGender] = useState("");
+  const [about, setAbout] = useState(null);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
 
     if (selectedFile) {
-        const fileType = selectedFile.type;
-        setPreviewUrl(URL.createObjectURL(selectedFile));
+      const fileType = selectedFile.type;
+      setPreviewUrl(URL.createObjectURL(selectedFile));
 
-        if (fileType.startsWith("image/")) {
-            setContent("image");
-        } else if (fileType.startsWith("video/")) {
-            setContent("video");
-        }
+      if (fileType.startsWith("image/")) {
+        setContent("image");
+      } else if (fileType.startsWith("video/")) {
+        setContent("video");
+      }
     }
-};
+  };
 
-const handleFeelingClick = () => {
+  const handleFeelingClick = () => {
     setContent("feeling");
-    setFeeling("😊 Happy"); 
-};
+    setFeeling("😊 Happy");
+  };
 
-const handleLocationClick = () => {
+  const handleLocationClick = () => {
     setContent("location");
-    setLocation("📍 New York");  
-};
+    setLocation("📍 New York");
+  };
 
-const handleUpload = async () => {
+  const handleUpload = async () => {
     if (!content) return alert("Please enter post content!");
 
     const formData = new FormData();
@@ -66,31 +82,31 @@ const handleUpload = async () => {
     if (location) formData.append("location", location);
 
     try {
-        const response = await fetch("http://localhost:8080/post/createpost", {
-            method: "POST",
-            body: formData,
-            headers: {
-                sessionId: sessionId,
-                userId: userId
-            }
-        });
+      const response = await fetch("http://localhost:8080/post/createpost", {
+        method: "POST",
+        body: formData,
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      });
 
-        if (!response.ok) throw new Error("Failed to upload post");
+      if (!response.ok) throw new Error("Failed to upload post");
 
-        console.log("Post created successfully");
-        alert("Post uploaded successfully!");
+      console.log("Post created successfully");
+      alert("Post uploaded successfully!");
     } catch (error) {
-        console.error("Upload failed:", error);
+      console.error("Upload failed:", error);
     }
-};
+  };
 
   const getPosts = async () => {
     const response = await fetch(`http://localhost:8080/post/posts/${userId}`, {
       method: "GET",
       headers: {
         sessionId,
-        userId
-      }
+        userId,
+      },
     });
 
     if (!response.ok) {
@@ -106,8 +122,8 @@ const handleUpload = async () => {
       method: "GET",
       headers: {
         sessionId,
-        userId
-      }
+        userId,
+      },
     });
 
     if (!response.ok) {
@@ -125,119 +141,76 @@ const handleUpload = async () => {
     }
   }, [userId]);
 
-//   const checkOrCreateConversation = async () => {
-//     try {
-//       const response = await fetch(`http://localhost:8080/conversations`, {
-//         method: "GET",
-//         headers: {
-//           sessionId,
-//           userId
-//         }
-//       });
+  const saveAboutInfo = async (field, value) => {
+    try {
+      const payload = { [field]: value };
 
-//       if (!response.ok) {
-//         throw new Error("Failed to fetch conversations");
-//       }
+      const response = await fetch("http://localhost:8080/bio", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          userId: userId,
+          sessionId: sessionId,
+        },
+        body: JSON.stringify(payload),
+      });
 
-//       const allConversations = await response.json();
+      if (!response.ok) throw new Error("Failed to update about info");
+      const data = await response.json();
+      console.log("Updated successfully", data);
+    } catch (err) {
+      console.error("Error:", err.message);
+    }
+  };
 
-//       let existingConvo = null;
+  const getBio = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/bio/${userId}`, {
+        method: "GET",
+        headers: {
+          userId: userId,
+          sessionId: sessionId,
+        },
+      });
 
-//       for (const convo of allConversations) {
-//         const res = await fetch(`http://localhost:8080/conversation-participants/${convo.conversationId}`, {
-//           headers: {
-//             sessionId,
-//             userId
-//           }
-//         });
+      if (!response.ok) {
+        throw new Error("Failed to fetch bio");
+      }
 
-//         if (!res.ok) continue;
+      const text = await response.text();
 
-//         const participants = await res.json();
+      // If response body is empty, don't parse it as JSON
+      if (!text) {
+        setAbout(null);
+        return;
+      }
 
-//         const isOther = participants.some(p => p.userId === parseInt(user_id));
-//         const isSelf = participants.some(p => p.userId === parseInt(userId));
+      const bioResponse = JSON.parse(text);
+      setAbout(bioResponse);
+      console.log("Bio:", bioResponse);
+    } catch (error) {
+      console.error("getBio error:", error.message);
+    }
+  };
 
-//         if (isOther && isSelf) {
-//           existingConvo = convo;
-//           break;
-//         }
-//       }
-
-//       if (existingConvo) {
-//         navigate("/chats", { state: { conversationId: existingConvo.conversationId } });
-//         return;
-//       }
-
-//       // Otherwise create a new conversation
-//       await createConversation();
-
-//     } catch (err) {
-//       console.error("Error:", err.message);
-//     }
-//   };
-
-//   const createConversation = async () => {
-//     const conversation = {
-//       createdAt: Date.now(),
-//       isGroup: false,
-//       creatorId: userId
-//     };
-
-//     const response = await fetch("http://localhost:8080/conversations", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         sessionId,
-//         userId
-//       },
-//       body: JSON.stringify(conversation)
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("Unable to create conversation");
-//     }
-
-//     const convo = await response.json();
-
-//     await addParticipant(convo.conversationId, userId);
-//     await addParticipant(convo.conversationId, user_id);
-
-//     navigate("/chats", { state: { conversationId: convo.conversationId } });
-//   };
-
-//   const addParticipant = async (convoId, uid) => {
-//     const participant = {
-//       conversationId: convoId,
-//       userId: uid,
-//       joinedAt: Date.now(),
-//       isAdmin: uid === userId
-//     };
-
-//     const response = await fetch("http://localhost:8080/conversation-participants", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         sessionId,
-//         userId
-//       },
-//       body: JSON.stringify(participant)
-//     });
-
-//     if (!response.ok) {
-//       throw new Error("Unable to add participant");
-//     }
-
-//     const data = await response.json();
-//     console.log("Participant added:", data);
-//   };
+  useEffect(() => {
+    getBio();
+  }, [userId]);
 
   return (
     <div className="profil-cont">
       <div className="cover-profile">
-        <img src="http://localhost:8080/uploads/1744261726947_beach.jpg" alt="cover" className="cover-image" />
+        <img
+          src="http://localhost:8080/uploads/1744261726947_beach.jpg"
+          alt="cover"
+          className="cover-image"
+        />
         <div className="profile-pic-wrapper">
-          <img src={userDetails?.profile_img_url} alt="profile" className="profile-pic" />
+          <img
+            src={userDetails?.profile_img_url}
+            alt="profile"
+            className="profile-pic"
+          />
         </div>
       </div>
       <div className="profile-username">
@@ -249,110 +222,194 @@ const handleUpload = async () => {
         </div>
         <div className="buttons">
           <button>Add Story</button>
-          <button>Edit profile</button>
+          <button>
+            <PiDotsThreeBold /> profile
+          </button>
         </div>
       </div>
       <div className="pafi">
-  {["Posts", "About", "Photos", "Friends"].map((tab) => (
-    <div
-      key={tab}
-      className={`entity ${activeTab === tab ? "active" : ""}`}
-      onClick={() => setActiveTab(tab)}
-    >
-      {tab}
-    </div>
-  ))}
-</div>
-<div className="user-pro-contents">
-  {activeTab === "Posts" && (
-    <>
-      <div className="user-info">
-        {/* You can show user details like workplace, education, etc. here later */}
-      </div>
-
-      <div className="user-posts">
-        {/* Post Creation Box */}
-        <div className="side11">
-          <div className="thought">
-            <div className="thought-pro">
-              <img
-                src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
-                className="post-pro-pic"
-                alt="profile"
-              />
-            </div>
-            <input
-              placeholder="Share your thoughts with the world..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="thought-cont"
-            />
+        {["Posts", "About", "Photos", "Friends"].map((tab) => (
+          <div
+            key={tab}
+            className={`entity ${activeTab === tab ? "active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
           </div>
-
-          <div className="contents">
-            <label htmlFor="file-input" className="contents1" style={{ color: "#3B82F6" }}>
-              <div><CollectionsOutlinedIcon /></div>
-              <div>Photo</div>
-            </label>
-            <input
-              id="file-input"
-              type="file"
-              accept="image/*, video/*"
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-
-            <label htmlFor="video-input" className="contents1" style={{ color: "lightgreen" }}>
-              <div><VideocamOutlinedIcon /></div>
-              <div>Video</div>
-            </label>
-            <input
-              id="video-input"
-              type="file"
-              accept="video/*"
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-
-            <div className="contents1" onClick={handleFeelingClick} style={{ color: "orange" }}>
-              <SentimentSatisfiedOutlinedIcon />
-              <div>Feeling</div>
-            </div>
-
-            <div className="contents1" onClick={handleLocationClick} style={{ color: "purple" }}>
-              <PlaceOutlinedIcon />
-              <div>Location</div>
-            </div>
-
-            <button className="share-btn" onClick={handleUpload}>
-              Share post
-            </button>
-          </div>
-        </div>
-
-        {/* Display Posts */}
-        {posts.map((item) => (
-          <Post postItem={item} key={item.postId} />
         ))}
       </div>
-    </>
-  )}
+      <div className="user-pro-contents">
+        {activeTab === "Posts" && (
+          <>
+            <div className="user-info">
+              {about?.workPlace && (<div className="info-display">
+                <div className="info-display-icon1"><SiWorkplace/></div>
+                <div className="info-display-content">{about?.workPlace}</div>
+                </div>)}
+              {about?.secondarySchool && (<div className="info-display1">
+                <div className="info-display-icon1"><RiSchoolLine/></div>
+                <div className="info-display-content">{about?.secondarySchool}</div>
+                </div>)}
+              {about?.university && (<div className="info-display1">
+                <div className="info-display-icon1"><LiaUniversitySolid/></div>
+                <div className="info-display-content">{about?.university}</div>
+                  </div>)}
+              {about?.currentCity && (<div className="info-display1">
+                <div className="info-display-icon1"><IoHomeOutline/></div>
+                <div className="info-display-content">{about?.currentCity}</div>
+                </div>)}
+              {about?.homeTown && (<div className="info-display1">
+                <div className="info-display-icon1"><CiLocationOn/></div>
+                 <div className="info-display-content">{about?.homeTown}</div>
+                 </div>)}
+              {about?.relationShipStatus && (<div className="info-display1">
+                <div className="info-display-icon1"><GiRelationshipBounds/></div>
+                <div className="info-display-content">{about?.relationShipStatus}</div>
+                  </div>)}
+            </div>
 
-  {activeTab === "About" &&  <div className="about">
+            <div className="user-posts">
+              {/* Post Creation Box */}
+              <div className="side11">
+                <div className="thought">
+                  <div className="thought-pro">
+                    <img
+                      src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
+                      className="post-pro-pic"
+                      alt="profile"
+                    />
+                  </div>
+                  <input
+                    placeholder="Share your thoughts with the world..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="thought-cont"
+                  />
+                </div>
+
+                <div className="contents">
+                  <label
+                    htmlFor="file-input"
+                    className="contents1"
+                    style={{ color: "#3B82F6" }}
+                  >
+                    <div>
+                      <CollectionsOutlinedIcon />
+                    </div>
+                    <div>Photo</div>
+                  </label>
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*, video/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+
+                  <label
+                    htmlFor="video-input"
+                    className="contents1"
+                    style={{ color: "lightgreen" }}
+                  >
+                    <div>
+                      <VideocamOutlinedIcon />
+                    </div>
+                    <div>Video</div>
+                  </label>
+                  <input
+                    id="video-input"
+                    type="file"
+                    accept="video/*"
+                    style={{ display: "none" }}
+                    onChange={handleFileChange}
+                  />
+
+                  <div
+                    className="contents1"
+                    onClick={handleFeelingClick}
+                    style={{ color: "orange" }}
+                  >
+                    <SentimentSatisfiedOutlinedIcon />
+                    <div>Feeling</div>
+                  </div>
+
+                  <div
+                    className="contents1"
+                    onClick={handleLocationClick}
+                    style={{ color: "purple" }}
+                  >
+                    <PlaceOutlinedIcon />
+                    <div>Location</div>
+                  </div>
+
+                  <button className="share-btn" onClick={handleUpload}>
+                    Share post
+                  </button>
+                </div>
+              </div>
+
+              {/* Display Posts */}
+              {posts.map((item) => (
+                <Post postItem={item} key={item.postId} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {activeTab === "About" && (
+          <div className="about">
             <div className="about-side1">About</div>
             <div className="about-side2">
               {/* Workplace */}
               <div className="about-section">
                 {showWorkplaceForm ? (
                   <>
-                    <input placeholder="Workplace" />
+                    <input
+                      value={workplace}
+                      placeholder="Workplace"
+                      onChange={(e) => setWorkplace(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
+                      <button
+                        onClick={() => setShowWorkplaceForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("workPlace", workplace);
+                          setShowWorkplaceForm(false);
+                        }}
+                      >
+                        Save
+                      </button>
                     </div>
                   </>
+                ) : about?.workPlace ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <SiWorkplace />
+                    </div>
+                    <div className="info-display-content">
+                      Works at{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.workPlace}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowWorkplaceForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowWorkplaceForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowWorkplaceForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add a workplace</span>
                   </button>
@@ -363,14 +420,52 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showSchoolForm ? (
                   <>
-                    <input placeholder="Secondary school" />
+                    <input
+                      value={secondaryschool}
+                      placeholder="Secondary school"
+                      onChange={(e) => setSecondaryschool(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
+                      <button
+                        onClick={() => setShowSchoolForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("secondarySchool", secondaryschool);
+                          setShowSchoolForm(false);
+                        }}
+                      >
+                        save
+                      </button>
                     </div>
-                    </>
+                  </>
+                ) : about?.secondarySchool ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <RiSchoolLine />
+                    </div>
+                    <div className="info-display-content">
+                      Went to{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.secondarySchool}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setSecondaryschool(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowSchoolForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowSchoolForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add secondary school</span>
                   </button>
@@ -381,13 +476,52 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showUniversityForm ? (
                   <>
-                    <input placeholder="University" />
+                    <input
+                      value={university}
+                      placeholder="University"
+                      onChange={(e) => setUniversity(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
-                    </div>                  </>
+                      <button
+                        onClick={() => setShowUniversityForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("university", university);
+                          setShowUniversityForm(false);
+                        }}
+                      >
+                        save
+                      </button>
+                    </div>{" "}
+                  </>
+                ) : about?.university ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <LiaUniversitySolid />
+                    </div>
+                    <div className="info-display-content">
+                      Studied at{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.university}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowUniversityForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowUniversityForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowUniversityForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add university</span>
                   </button>
@@ -398,13 +532,52 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showCityForm ? (
                   <>
-                    <input placeholder="Current City" />
+                    <input
+                      value={currentcity}
+                      placeholder="Current City"
+                      onChange={(e) => setCurrentcity(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
-                    </div>                  </>
+                      <button
+                        onClick={() => setShowCityForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("currentCity", currentcity);
+                          setShowCityForm(false);
+                        }}
+                      >
+                        save
+                      </button>
+                    </div>{" "}
+                  </>
+                ) : about?.currentCity ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <IoHomeOutline />
+                    </div>
+                    <div className="info-display-content">
+                      Lives in{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.currentCity}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowCityForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowCityForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowCityForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add current city</span>
                   </button>
@@ -415,13 +588,52 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showHometownForm ? (
                   <>
-                    <input placeholder="Hometown" />
+                    <input
+                      value={hometown}
+                      placeholder="Hometown"
+                      onChange={(e) => setHometown(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
-                    </div>                  </>
+                      <button
+                        onClick={() => setShowHometownForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("homeTown", hometown);
+                          setShowHometownForm(false);
+                        }}
+                      >
+                        save
+                      </button>
+                    </div>{" "}
+                  </>
+                ) : about?.homeTown ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <CiLocationOn />
+                    </div>
+                    <div className="info-display-content">
+                      From{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.homeTown}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowHometownForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowHometownForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowHometownForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add hometown</span>
                   </button>
@@ -432,13 +644,55 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showRelationshipForm ? (
                   <>
-                    <input placeholder="Relationship status" />
+                    <input
+                      value={relationshipstatus}
+                      placeholder="Relationship status"
+                      onChange={(e) => setRelationshipstatus(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
-                    </div>                  </>
+                      <button
+                        onClick={() => setShowRelationshipForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo(
+                            "relationShipStatus",
+                            relationshipstatus
+                          );
+                          setShowRelationshipForm(false);
+                        }}
+                      >
+                        save
+                      </button>
+                    </div>{" "}
+                  </>
+                ) : about?.relationShipStatus ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <GiRelationshipBounds />
+                    </div>
+                    <div className="info-display-content">
+                      Relationship status{" "}
+                      <span style={{ fontWeight: "bold" }}>
+                        {about?.relationShipStatus}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowRelationshipForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowRelationshipForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowRelationshipForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add relationship status</span>
                   </button>
@@ -449,13 +703,49 @@ const handleUpload = async () => {
               <div className="about-section">
                 {showGenderForm ? (
                   <>
-                    <input placeholder="Gender" />
+                    <input
+                      value={gender}
+                      placeholder="Gender"
+                      onChange={(e) => setGender(e.target.value)}
+                    />
                     <div className="add-cancel">
-                    <button onClick={() => setShowWorkplaceForm(false)} className="cancel-btn">Cancel</button>
-                    <button className="save-btn">save</button>
-                    </div>                  </>
+                      <button
+                        onClick={() => setShowGenderForm(false)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="save-btn"
+                        onClick={() => {
+                          saveAboutInfo("gender", gender);
+                          setShowGenderForm(false);
+                        }}
+                      >
+                        save
+                      </button>
+                    </div>{" "}
+                  </>
+                ) : about?.gender ? (
+                  <div className="info-display">
+                    <div className="info-display-icon">
+                      <SiWorkplace />
+                    </div>
+                    <div className="info-display-content">
+                      Gender {about?.gender}
+                    </div>
+                    <button
+                      onClick={() => setShowGenderForm(true)}
+                      className="info-display-btn"
+                    >
+                      <PiDotsThreeBold />
+                    </button>
+                  </div>
                 ) : (
-                  <button onClick={() => setShowGenderForm(true)} className="add-btn">
+                  <button
+                    onClick={() => setShowGenderForm(true)}
+                    className="add-btn"
+                  >
                     <CiCirclePlus size={20} />
                     <span>Add gender</span>
                   </button>
@@ -463,11 +753,10 @@ const handleUpload = async () => {
               </div>
             </div>
           </div>
-          }
-  {activeTab === "Photos" && <div>Photos content</div>}
-  {activeTab === "Friends" && <div>Friends content</div>}
-</div>
-
+        )}
+        {activeTab === "Photos" && <div>Photos content</div>}
+        {activeTab === "Friends" && <div>Friends content</div>}
+      </div>
     </div>
   );
 }
