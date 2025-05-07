@@ -1,7 +1,8 @@
 import Suggestion from "../components/suggestion/suggestion";
 import { useEffect, useState } from "react";
 import UserProfile from "./userprofile";
-
+import { Link } from "react-router-dom";
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 
 export default function SuggestionsPage(){
     let[suggestion,setSuggestion] = useState([]);
@@ -36,6 +37,12 @@ export default function SuggestionsPage(){
     return(
          <div className="friend-cont">
             <div className="friend-cont-side1">
+            <div className="friend-cont-side1-child">
+                    <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
+                       <ArrowBackOutlinedIcon style={{ fontSize: "30px", marginTop: "10px", marginLeft: "10px",color:"#fff" }} />
+                    </Link>
+                    <div className="friend-cont-side1-child-text">Friend Requests</div>  
+                </div>
                {suggestion.map((item) => {
                 return(
                 <div key={item.userId} onClick={() => setSelectedUserId(item.userId)} style={{ cursor: "pointer" }}>
