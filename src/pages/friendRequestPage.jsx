@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import FriendRequest from "../components/friendRequest/friendRequest";
 import { Link } from "react-router-dom";
 import UserProfile from "./userprofile";
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 export default function FriendRequestPage(){
     let[friendRequests,setFriendRequests] = useState([]);
     const sessionId = localStorage.getItem("sessionId");
@@ -34,6 +35,14 @@ export default function FriendRequestPage(){
     return(
         <div className="friend-cont">
             <div className="friend-cont-side1">
+                <div className="friend-cont-side1-child">
+                    <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
+                       <ArrowBackOutlinedIcon style={{ fontSize: "30px", marginTop: "10px", marginLeft: "10px",color:"#fff" }} />
+                    </Link>
+                    <div className="friend-cont-side1-child-text">Friend Requests</div>  
+                </div>
+               
+                <div className="requests-number">{friendRequests.length} friend requests</div>
                {friendRequests.map((item) => {
                 return(
                 <div key={item.userId} onClick={() => setSelectedUserId(item.userId)} style={{ cursor: "pointer" }}>
