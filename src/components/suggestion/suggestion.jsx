@@ -4,6 +4,30 @@ export default function Suggestion({suggestedItem}){
     const sessionId = localStorage.getItem("sessionId");
     const userId = localStorage.getItem("userId");
     const [friendRequests, setFriendRequests] = useState({});
+    const [mutualFriends,setMutualFriends] = useState([])
+
+    const getMutualsFriends = async () => {
+        const response = await fetch(`http://localhost:8080/friendship/mutual-friends/${suggestedItem?.userId}`,{
+         method:"GET",
+         headers:{
+           sessionId:sessionId,
+           userId:userId
+         }
+        });
+   
+        if(!response.ok){
+         throw new Error("failed to fetch")
+        }
+   
+        const mutualResponse = await response.json();
+        setMutualFriends(mutualResponse);
+   
+        console.log(mutualResponse)
+     }
+   
+     useEffect(() => {
+       getMutualsFriends()
+     },[])
 
     useEffect(() => {
         const fetchPendingRequests = async () => {
@@ -58,8 +82,8 @@ export default function Suggestion({suggestedItem}){
                 <img src={suggestedItem?.profile_img_url} className="sugg-pic"/>
             </div>
             <div className="sugg-name">
-               <div>{suggestedItem?.name}</div>
-               <div></div>
+               <div className="sugg-name-user">{suggestedItem?.name}</div>
+               <div style={{color:"#3B82F6"}}>{mutualFriends.length} mutual Friends</div>
             </div>
             <div className="sugg-add">
             <button onClick={() => friendRequests[suggestedItem.userId] 
