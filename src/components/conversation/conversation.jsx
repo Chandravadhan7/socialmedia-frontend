@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
 import "./conversation.css";
+import { RiCheckDoubleLine } from "react-icons/ri";
+import { GoDotFill } from "react-icons/go";
 
 export default function Conversation({ conversationId, onClick, isSelected }) {
-  const [participants, setParticipants] = useState('');
+  const [participants, setParticipants] = useState("");
   const sessionId = localStorage.getItem("sessionId");
   const userId = Number(localStorage.getItem("userId"));
   const [userDetails, setUserDetails] = useState(null);
   const [otherUserId, setOtherUserId] = useState(null);
   const [convo, setConvo] = useState(null);
+  const [unseenMessage, setUnseenMessage] = useState([]);
   const [latestMessage, setLatestMessage] = useState(null);
 
   const getParticipants = async () => {
-    const response = await fetch(`http://localhost:8080/conversation-participants/${conversationId}`, {
-      method: "GET",
-      headers: {
-        sessionId: sessionId,
-        userId: userId
+    const response = await fetch(
+      `http://localhost:8080/conversation-participants/${conversationId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
       }
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch participants");
@@ -26,7 +32,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
     const participantsResponse = await response.json();
     setParticipants(participantsResponse);
 
-    const otherUser = participantsResponse.find(p => p.userId !== userId);
+    const otherUser = participantsResponse.find((p) => p.userId !== userId);
     setOtherUserId(otherUser?.userId);
   };
 
@@ -39,8 +45,8 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
       method: "GET",
       headers: {
         sessionId: sessionId,
-        userId: userId
-      }
+        userId: userId,
+      },
     });
 
     if (!response.ok) {
@@ -58,13 +64,16 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
   }, [otherUserId]);
 
   const getConversation = async () => {
-    const response = await fetch(`http://localhost:8080/conversations/${conversationId}`, {
-      method: "GET",
-      headers: {
-        sessionId: sessionId,
-        userId: userId
+    const response = await fetch(
+      `http://localhost:8080/conversations/${conversationId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
       }
-    });
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch conversation");
@@ -78,43 +87,92 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
     getConversation();
   }, [conversationId]);
 
-  const getLatestMessages = async () => {
+  const getUnseenMessage = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/messages/latest-unseen-message/${conversationId}`, {
-        method: "GET",
-        headers: {
-          sessionId: sessionId,
-          userId: userId
+      const response = await fetch(
+        `http://localhost:8080/messages/latest-unseen-message/${conversationId}`,
+        {
+          method: "GET",
+          headers: {
+            sessionId: sessionId,
+            userId: userId,
+          },
         }
-      });
-  
+      );
+
       const text = await response.text();
-  
+
       if (!text || text === "null") {
-        console.log("No unseen message found.");
         return;
       }
-  
+
       const messageResponse = JSON.parse(text);
-      setLatestMessage(messageResponse);
-      console.log("latest message", messageResponse);
+      setUnseenMessage(messageResponse);
     } catch (err) {
       console.error("Error fetching latest unseen message:", err);
     }
   };
-  
+
+  const getLatestMessages = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/messages/latest-message/${conversationId}`,
+        {
+          method: "GET",
+          headers: {
+            sessionId: sessionId,
+            userId: userId,
+          },
+        }
+      );
+
+      const text = await response.text();
+
+      if (!text || text === "null") {
+        return;
+      }
+
+      const messageResponse = JSON.parse(text);
+      setLatestMessage(messageResponse);
+    } catch (err) {
+      console.error("Error fetching latest unseen message:", err);
+    }
+  };
+
   useEffect(() => {
     if (otherUserId) {
-      console.log("Calling getLatestMessages with:", otherUserId);
-      getLatestMessages();
-    } else {
-      console.log("otherUserId is not set yet");
+      getUnseenMessage();
     }
+    getLatestMessages();
   }, [conversationId, otherUserId]);
-  
+
+  const setLastSeen = async () => {
+    const response = await fetch(
+      `http://localhost:8080/conversation-participants/last-seen/${conversationId}/${userId}`,
+      {
+        method: "PATCH",
+        headers: {
+          sessionId,
+          userId,
+        },
+      }
+    );
+
+    if (response.ok) {
+      setUnseenMessage([]); 
+    }
+  };
+
+  const handleConversationClick = async () => {
+    await setLastSeen();
+    onClick();
+  };
 
   return (
-    <div onClick={onClick} className={`chat-cont ${isSelected ? "selected-chat" : ""}`}>
+    <div
+      onClick={handleConversationClick}
+      className={`chat-cont ${isSelected ? "selected-chat" : ""}`}
+    >
       <div className="chat-cont-pic">
         <img
           src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
@@ -124,13 +182,31 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
       </div>
       <div className="chat-cont-name">
         <div className="name-u">
-          {convo?.isGroup ? convo?.title || "Unnamed Group" : userDetails?.name || "Unknown User"}
+          {convo?.isGroup
+            ? convo?.title || "Unnamed Group"
+            : userDetails?.name || "Unknown User"}
         </div>
         <div className="last-msg">
-          {latestMessage?.content}
+          {unseenMessage.length > 0 ? (
+            <>
+              <GoDotFill style={{ color: "#3B82F6", fontSize: "120%" }} />
+              <div>{unseenMessage[0]?.content}</div>
+            </>
+          ) : (
+            <>
+              {latestMessage && latestMessage.senderId === userId && (
+                <RiCheckDoubleLine style={{ fontSize: "120%" }} />
+              )}
+              <div>{latestMessage?.content}</div>
+            </>
+          )}
         </div>
       </div>
-      <div className="chat-cont-time"></div>
+      {unseenMessage && unseenMessage?.length > 0 && (
+        <div className="chat-cont-time">
+          <div className="chat-cont-time-child">{unseenMessage?.length}</div>
+        </div>
+      )}
     </div>
   );
 }
