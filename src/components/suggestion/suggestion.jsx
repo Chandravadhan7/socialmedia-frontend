@@ -58,7 +58,6 @@ export default function Suggestion({suggestedItem}){
             headers: { userId: userId, sessionId: sessionId }
         });
     
-        // Update state to mark request as pending
         setFriendRequests((prev) => ({ ...prev, [id]: true }));
     };
 
@@ -68,7 +67,6 @@ export default function Suggestion({suggestedItem}){
             headers: { userId: userId, sessionId: sessionId }
         });
     
-        // Remove from state
         setFriendRequests((prev) => {
             const updated = { ...prev };
             delete updated[id];
@@ -83,7 +81,7 @@ export default function Suggestion({suggestedItem}){
             </div>
             <div className="sugg-name">
                <div className="sugg-name-user">{suggestedItem?.name}</div>
-               <div style={{color:"#3B82F6"}}>{mutualFriends.length} mutual Friends</div>
+               { mutualFriends.length>0 && <div style={{fontSize:"80%",color:"#3B82F6"}}>{mutualFriends.length} mutual Friends</div>}
             </div>
             <div className="sugg-add">
             <button onClick={() => friendRequests[suggestedItem.userId] 
