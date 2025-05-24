@@ -35,7 +35,7 @@ export default function FriendRequestCard({item}){
             </div>
             <div className="request-name">
                 <div className="request-name-user">{item?.name}</div>
-                <div style={{color:"#fff"}}>{mutualFriends.length} mutual Friends</div>
+                { mutualFriends.length>0 && <div style={{fontSize:"80%",color:"#3B82F6"}}>{mutualFriends.length} mutual Friends</div>}
             </div>
             <div className="request-btns">
                 <button>confrim</button>

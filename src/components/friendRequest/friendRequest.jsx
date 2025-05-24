@@ -71,7 +71,7 @@ export default function FriendRequest({requestItem}){
            <div className="req-name-btns">
              <div className="req-name">
               <div className="req-name-text">{requestItem?.name}</div>
-              <div style={{fontSize:"80%"}}>{mutualFriends.length} mutual Friends</div>
+                { mutualFriends.length>0 && <div style={{fontSize:"80%",color:"#3B82F6"}}>{mutualFriends.length} mutual Friends</div>}
              </div>
              <div className="req-btns">
                 <button onClick={acceptFriendRequest} style={{backgroundColor:"#3B82F6"}}>Accept</button>
