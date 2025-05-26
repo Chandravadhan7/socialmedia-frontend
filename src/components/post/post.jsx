@@ -6,8 +6,9 @@ import { fetchLikes } from "../../pages/fetchLikes";
 import Comment from "../comments/comment";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import MapsUgcOutlinedIcon from '@mui/icons-material/MapsUgcOutlined';
+import { FaRegComment } from "react-icons/fa";
 import ShareIcon from '@mui/icons-material/Share';
+import { BsThreeDots } from "react-icons/bs";
 export default function Post({ postItem }) {
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
@@ -15,6 +16,7 @@ export default function Post({ postItem }) {
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
   const [userDetails,setUserDetails] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const dispatch = useDispatch();
   const postId = postItem?.postId;
@@ -149,6 +151,32 @@ export default function Post({ postItem }) {
 
   const hasDescription = !!postItem?.description;
 
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const deletePost = async () => {
+    const response = await fetch(
+      `http://localhost:8080/post/delete-post?postId=${postItem?.postId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          userId: userId,
+          sessionId: sessionId,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete post");
+    }
+
+    alert("Post deleted successfully!");
+    window.location.reload(); // Reload the page after deletion
+  };
+
+
   return (
     <div className="whole-cont">
       <div
@@ -171,6 +199,19 @@ export default function Post({ postItem }) {
             <div className="post-pro-name-time">
               {getRelativeTime(postItem?.createdAt)}
             </div>
+          </div>
+          <div className="dropdown-container">
+            <BsThreeDots
+              style={{ fontSize: "140%", cursor: "pointer" }}
+              onClick={toggleDropdown}
+            />
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <div className="dropdown-item" onClick={deletePost}>
+                  Delete
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -195,7 +236,7 @@ export default function Post({ postItem }) {
             className="post-comment"
             onClick={() => setShowComments(!showComments)}
           >
-            <MapsUgcOutlinedIcon/>
+            <FaRegComment style={{fontSize:"130%"}}/>
           </div>
           <div className="post-share"><ShareIcon/></div>
         </div>
