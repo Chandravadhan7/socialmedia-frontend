@@ -41,7 +41,7 @@ export default function SuggestionsPage(){
                     <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
                        <ArrowBackOutlinedIcon style={{ fontSize: "30px", marginTop: "10px", marginLeft: "10px",color:"#fff" }} />
                     </Link>
-                    <div className="friend-cont-side1-child-text">Friend Requests</div>  
+                    <div className="friend-cont-side1-child-text">Suggestions</div>  
                 </div>
                {suggestion.map((item) => {
                 return(
