@@ -21,10 +21,15 @@ export default function Header(){
                 </div>
               </div>
               <div className="header12">
-                <Link><GrHomeRounded style={{fontSize:"150%",color:"#fff"}}/></Link>
+                <Link to ="/*"><GrHomeRounded style={{fontSize:"150%",color:"#fff"}}/></Link>
                 <Link to="/friends"><PeopleAltOutlinedIcon style={{fontSize:"180%",color:"#fff"}}/></Link>
                 <Link to="/chats"><FiMessageSquare style={{fontSize:"180%",color:"#fff"}}/></Link>
                 <Link><IoIosNotificationsOutline style={{fontSize:"200%",color:"#fff"}}/></Link>
+                <Link to="/profile"className="post-pro-pic-cont">
+                <img src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
+                className="post-pro-pic"
+                 alt="profile"/>
+                </Link>
               </div>
             </div>
         </div>
