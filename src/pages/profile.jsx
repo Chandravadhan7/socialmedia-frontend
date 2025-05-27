@@ -14,6 +14,8 @@ import { IoHomeOutline } from "react-icons/io5";
 import { CiLocationOn } from "react-icons/ci";
 import { GiRelationshipBounds } from "react-icons/gi";
 import { PiDotsThreeBold } from "react-icons/pi";
+import FriendCard from "../components/friendCard/friendCard";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   const [posts, setPosts] = useState([]);
@@ -43,6 +45,25 @@ export default function Profile() {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState(null);
+  const [friends, setFriends] = useState([]);
+
+  const [profilePic, setProfilePic] = useState(null);
+  const [coverPic, setCoverPic] = useState(null);
+
+  const handlePicChange = async (event, type) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const imageUrl = await uploadImage(file, type, userId);
+    if (imageUrl) {
+      if (type === "profile") {
+        setProfilePic(imageUrl);
+      } else {
+        setCoverPic(imageUrl);
+      }
+    }
+  };
+  
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -197,20 +218,107 @@ export default function Profile() {
     getBio();
   }, [userId]);
 
+  const getAllFriends = async () => {
+    const response = await fetch(
+      `http://localhost:8080/friendship/friends/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to fetch friends");
+    }
+
+    const friendsresponse = await response.json();
+
+    setFriends(friendsresponse);
+    console.log("friends", friendsresponse);
+  };
+
+  useEffect(() => {
+    getAllFriends();
+  }, []);
+
+  const uploadImage = async (file, type, userId) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("userId", userId);
+
+  const endpoint =
+    type === "profile"
+      ? "http://localhost:8080/user/update-profile-pic"
+      : "http://localhost:8080/user/update-cover-pic";
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "PATCH",
+      headers: {
+        sessionId: sessionId,
+        userId: userId,
+      },
+      body: formData,
+
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to upload ${type} picture`);
+    }
+
+    const imageUrl = await response.text(); 
+    return imageUrl;
+  } catch (error) {
+    console.error("Image upload failed:", error);
+    return null;
+  }
+};
+
   return (
     <div className="profil-cont">
-      <div className="cover-profile">
+      <div className="cover-profile" style={{ position: "relative" }}>
         <img
-          src="http://localhost:8080/uploads/1744261726947_beach.jpg"
+          src={ userDetails?.cover_pic_url}
           alt="cover"
           className="cover-image"
         />
+        <label
+          htmlFor="cover-file-input"
+          className="cover-pic-plus-btn"
+          title="Add/Change Cover Picture"
+        >
+          <CiCirclePlus />
+          <input
+            id="cover-file-input"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={(e) => handlePicChange(e, "cover")}
+          />
+        </label>
         <div className="profile-pic-wrapper">
           <img
             src={userDetails?.profile_img_url}
             alt="profile"
             className="profile-pic"
           />
+          <label
+            htmlFor="profile-file-input"
+            className="profile-pic-plus-btn"
+            title="Add/Change Profile Picture"
+          >
+            <CiCirclePlus />
+            <input
+              id="profile-file-input"
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={(e) => handlePicChange(e, "profile")}
+            />
+          </label>
         </div>
       </div>
       <div className="profile-username">
@@ -242,34 +350,65 @@ export default function Profile() {
         {activeTab === "Posts" && (
           <>
             <div className="user-info">
-              {about?.workPlace && (<div className="info-display">
-                <div className="info-display-icon1"><SiWorkplace/></div>
-                <div className="info-display-content">{about?.workPlace}</div>
-                </div>)}
-              {about?.secondarySchool && (<div className="info-display1">
-                <div className="info-display-icon1"><RiSchoolLine/></div>
-                <div className="info-display-content">{about?.secondarySchool}</div>
-                </div>)}
-              {about?.university && (<div className="info-display1">
-                <div className="info-display-icon1"><LiaUniversitySolid/></div>
-                <div className="info-display-content">{about?.university}</div>
-                  </div>)}
-              {about?.currentCity && (<div className="info-display1">
-                <div className="info-display-icon1"><IoHomeOutline/></div>
-                <div className="info-display-content">{about?.currentCity}</div>
-                </div>)}
-              {about?.homeTown && (<div className="info-display1">
-                <div className="info-display-icon1"><CiLocationOn/></div>
-                 <div className="info-display-content">{about?.homeTown}</div>
-                 </div>)}
-              {about?.relationShipStatus && (<div className="info-display1">
-                <div className="info-display-icon1"><GiRelationshipBounds/></div>
-                <div className="info-display-content">{about?.relationShipStatus}</div>
-                  </div>)}
+              {about?.workPlace && (
+                <div className="info-display">
+                  <div className="info-display-icon1">
+                    <SiWorkplace />
+                  </div>
+                  <div className="info-display-content">{about?.workPlace}</div>
+                </div>
+              )}
+              {about?.secondarySchool && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <RiSchoolLine />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.secondarySchool}
+                  </div>
+                </div>
+              )}
+              {about?.university && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <LiaUniversitySolid />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.university}
+                  </div>
+                </div>
+              )}
+              {about?.currentCity && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <IoHomeOutline />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.currentCity}
+                  </div>
+                </div>
+              )}
+              {about?.homeTown && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <CiLocationOn />
+                  </div>
+                  <div className="info-display-content">{about?.homeTown}</div>
+                </div>
+              )}
+              {about?.relationShipStatus && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <GiRelationshipBounds />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.relationShipStatus}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="user-posts">
-              {/* Post Creation Box */}
               <div className="side11">
                 <div className="thought">
                   <div className="thought-pro">
@@ -754,8 +893,28 @@ export default function Profile() {
             </div>
           </div>
         )}
-        {activeTab === "Photos" && <div>Photos content</div>}
-        {activeTab === "Friends" && <div>Friends content</div>}
+        {activeTab === "Photos" && (
+          <div className="photos-cont">
+            {posts.map((item) => {
+              return (
+                <div className="photo">
+                  <img src={item?.imageUrl} className="photo-img" />
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {activeTab === "Friends" && (
+          <div className="frnds-cont">
+            {friends.map((item) => {
+              return (
+                <Link className="frnd-card" to={`/profile/${item.userId}`}>
+                  <FriendCard friendItem={item} />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
