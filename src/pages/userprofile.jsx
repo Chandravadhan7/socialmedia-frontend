@@ -9,6 +9,8 @@ import { IoHomeOutline } from "react-icons/io5";
 import { CiLocationOn } from "react-icons/ci";
 import { GiRelationshipBounds } from "react-icons/gi";
 import { PiDotsThreeBold } from "react-icons/pi";
+import { Link } from "react-router-dom";
+import FriendCard from "../components/friendCard/friendCard";
 
 export default function UserProfile({ user_id }) {
   const [posts, setPosts] = useState([]);
@@ -19,7 +21,8 @@ export default function UserProfile({ user_id }) {
   const [activeTab, setActiveTab] = useState("Posts");
   const [about, setAbout] = useState(null);
   const [mutualFriends,setMutualFriends] = useState([])
-
+  let [friends,setFriends] = useState([]);
+  
   const getPosts = async () => {
     const response = await fetch(`http://localhost:8080/post/posts/${user_id}`, {
       method: "GET",
@@ -224,6 +227,30 @@ export default function UserProfile({ user_id }) {
    useEffect(() => {
      getMutualsFriends()
    },[])
+
+   const getAllFriends = async () => {
+           const response = await fetch(`http://localhost:8080/friendship/friends/${user_id}`,{
+               method:"GET",
+               headers:{
+                   sessionId:sessionId,
+                   userId:userId
+               }
+           });
+   
+           if(!response.ok){
+               throw new Error("failed to fetch friends");
+           }
+   
+           const friendsresponse = await response.json();
+   
+           setFriends(friendsresponse);
+           console.log("friends", friendsresponse);
+       }
+   
+       useEffect(() => {
+           getAllFriends()
+       },[]);
+
    return (
     <div className="profil-cont">
       <div className="cover-pro">
@@ -326,6 +353,9 @@ export default function UserProfile({ user_id }) {
             </div>
   
             <div className="user-posts">
+              {posts.length === 0 && (
+              <div className="no-posts">No posts Yet</div>
+            )}
               {posts.map((item) => (
                 <Post postItem={item} key={item.postId} />
               ))}
@@ -426,8 +456,24 @@ export default function UserProfile({ user_id }) {
           </div>
         )}
   
-        {activeTab === "Photos" && <div>Photos content</div>}
-        {activeTab === "Friends" && <div>Friends content</div>}
+        {activeTab === "Photos" && <div className="photos-cont">
+              {posts.map((item)=>{
+                return(
+                  <div className="photo">
+                      <img src={item?.imageUrl} className="photo-img"/>
+                  </div>
+                )
+              })}
+          </div>}
+        {activeTab === "Friends" && <div className="frnds-cont">
+              {friends.map((item) => {
+                return(
+                  <Link className="frnd-card" to={`/profile/${item.userId}`}> 
+                  <FriendCard friendItem={item}/>
+                  </Link>
+                )
+              })}
+          </div>}
       </div>
     </div>
   );
