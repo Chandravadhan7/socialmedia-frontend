@@ -3,6 +3,9 @@ import "./chatbox.css"
 import { useState } from "react";
 import Message from "../components/message/message";
 import { RxCross1 } from "react-icons/rx";
+import { MdBlock } from "react-icons/md";
+import { MdOutlineReportProblem } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function ChatBox({conversationId}){
     let [message,setMessage] = useState('');
@@ -208,7 +211,6 @@ export default function ChatBox({conversationId}){
                             {userDetails?.name}
                        </div>
                        </div>
-                       
                     </div>
                     <div className="convo-about">
 
@@ -216,7 +218,20 @@ export default function ChatBox({conversationId}){
                     <div className="common-groups">
                         <div className="common-groups-head">groups in common</div>
                     </div>
-                    <div className="brd"></div>
+                    <div className="brd">
+                        <div className="report">
+                            <MdBlock style={{fontSize:"135%"}}/>
+                            <div style={{fontSize:"110%"}}>block</div>
+                        </div>
+                        <div className="report">
+                            <MdOutlineReportProblem style={{fontSize:"135%"}}/>
+                            <div style={{fontSize:"110%"}}>Report</div>
+                        </div>
+                        <div className="report">
+                            <MdDeleteOutline style={{fontSize:"135%"}}/>
+                            <div style={{fontSize:"110%"}}>Delete</div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
