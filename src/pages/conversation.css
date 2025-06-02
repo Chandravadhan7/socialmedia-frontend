@@ -2,6 +2,7 @@
     width:100%;
     height:91vh;
     display: flex;
+    background-color: #0d1930;
 }
 .convo-page-side1{
     width:26%;
@@ -65,11 +66,13 @@
     margin: 5px;
     transition: 0.3s;
     cursor: pointer;
+    color: #fff;
   }
   
   .friend-select-wrapper.selected {
     border: 2px solid #007bff;
     background-color: #f0f8ff;
+    color: #1D2638;
   }
   
   .group-icon-section {
