@@ -15,8 +15,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap:6%;
-    padding-bottom: 5%;
+    gap:8%;
+    padding-bottom: 3%;
     color: #fff;
 }
 .name-u{
@@ -27,14 +27,29 @@
     text-transform: capitalize;
 }
 .last-msg{
-    height:20%;
+    height:25%;
     /* border: 1px solid orangered; */
     font-size: 90%;
     text-align: left;
+    display: flex;
+    gap:2%;
+    align-items: end;
 }
 .chat-cont-time{
     width:18%;
-    /* border: 1px solid pink; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chat-cont-time-child{
+    padding: 0;
+    margin: 0;
+    padding: 0.3% 10%;
+    border-radius: 50%;
+    color: #3B82F6;
+    background-color: white; 
+    font-size: 100%;
+    font-weight: 600;
 }
 .selected-chat {
     background-color: #2e3b4e;
