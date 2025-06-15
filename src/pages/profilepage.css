@@ -370,3 +370,78 @@
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
+@media  screen and (max-width: 500px) {
+  .cover-profile{
+    margin-left: 0%;
+    margin-right: 0%;
+  }
+  .profile-username{
+    margin-left: 3%;
+    margin-right: 3%;
+    gap:10%;
+  }
+  .pafi{
+    margin-left: 3%;
+    margin-right: 3%;
+    height:3rem;
+  }
+  .user-pro-contents{
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+  .user-info{
+    display: none;
+  }
+  .about-side1{
+    display: none;
+  }
+  .about{
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 96%;
+  }
+  .about-side2{
+    width: 100%;
+  }
+  .info-display-content{
+    width: 78%;
+    font-size: 90%;
+  }
+  .info-display-icon{
+    width: 12%;
+  }
+  .buttons{
+    width:50%;
+    font-size: 80%;
+  }
+  .profile-pic-wrapper{
+    width: 4rem;
+    height: 4rem;
+  }
+  .profile-pic-plus-btn{
+    bottom: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+  }
+  .cover-pic-plus-btn {
+    bottom: 45px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+  }
+  .photo {
+    height: 15rem;
+    width: 10rem;
+  }
+  .photos-cont{
+    padding-left: 4%;
+    gap:15px;
+    align-items: start;
+    width: 95%;
+  }
+  .frnd-card{
+    width:45%;
+    height:70px;
+  }
+}

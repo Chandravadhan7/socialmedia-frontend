@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./profilepage.css";
@@ -12,8 +12,8 @@ import { GiRelationshipBounds } from "react-icons/gi";
 import { Link } from "react-router-dom";
 import FriendCard from "../components/friendCard/friendCard";
 
-export default function FriendsProfile(){
-  const {user_id} = useParams();
+export default function FriendsProfile() {
+  const { user_id } = useParams();
   const [posts, setPosts] = useState([]);
   const [userDetails, setUserDetails] = useState(null);
   const sessionId = localStorage.getItem("sessionId");
@@ -21,14 +21,17 @@ export default function FriendsProfile(){
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Posts");
   const [about, setAbout] = useState(null);
-  const [mutualFriends,setMutualFriends] = useState([])
-  let [friends,setFriends] = useState([]);
+  const [mutualFriends, setMutualFriends] = useState([]);
+  let [friends, setFriends] = useState([]);
 
   const getPosts = async () => {
-    const response = await fetch(`http://localhost:8080/post/posts/${user_id}`, {
-      method: "GET",
-      headers: { sessionId, userId }
-    });
+    const response = await fetch(
+      `http://localhost:8080/post/posts/${user_id}`,
+      {
+        method: "GET",
+        headers: { sessionId, userId },
+      }
+    );
 
     if (!response.ok) throw new Error("failed to fetch posts");
 
@@ -39,7 +42,7 @@ export default function FriendsProfile(){
   const getUser = async () => {
     const response = await fetch(`http://localhost:8080/user/${user_id}`, {
       method: "GET",
-      headers: { sessionId, userId }
+      headers: { sessionId, userId },
     });
 
     if (!response.ok) throw new Error("failed to fetch user details");
@@ -59,7 +62,7 @@ export default function FriendsProfile(){
     try {
       const response = await fetch(`http://localhost:8080/conversations`, {
         method: "GET",
-        headers: { sessionId, userId }
+        headers: { sessionId, userId },
       });
 
       if (!response.ok) throw new Error("Failed to fetch conversations");
@@ -68,16 +71,21 @@ export default function FriendsProfile(){
       let existingConvo = null;
 
       for (const convo of allConversations) {
-        const res = await fetch(`http://localhost:8080/conversation-participants/${convo.conversationId}`, {
-          headers: { sessionId, userId }
-        });
+        const res = await fetch(
+          `http://localhost:8080/conversation-participants/${convo.conversationId}`,
+          {
+            headers: { sessionId, userId },
+          }
+        );
 
         if (!res.ok) continue;
 
         const participants = await res.json();
 
-        const isOther = participants.some(p => p.userId === parseInt(user_id));
-        const isSelf = participants.some(p => p.userId === parseInt(userId));
+        const isOther = participants.some(
+          (p) => p.userId === parseInt(user_id)
+        );
+        const isSelf = participants.some((p) => p.userId === parseInt(userId));
 
         if (isOther && isSelf) {
           existingConvo = convo;
@@ -86,12 +94,13 @@ export default function FriendsProfile(){
       }
 
       if (existingConvo) {
-        navigate("/chats", { state: { conversationId: existingConvo.conversationId } });
+        navigate("/chats", {
+          state: { conversationId: existingConvo.conversationId },
+        });
         return;
       }
 
       await createConversation();
-
     } catch (err) {
       console.error("Error:", err.message);
     }
@@ -101,7 +110,7 @@ export default function FriendsProfile(){
     const conversation = {
       createdAt: Date.now(),
       isGroup: false,
-      creatorId: userId
+      creatorId: userId,
     };
 
     const response = await fetch("http://localhost:8080/conversations", {
@@ -109,9 +118,9 @@ export default function FriendsProfile(){
       headers: {
         "Content-Type": "application/json",
         sessionId,
-        userId
+        userId,
       },
-      body: JSON.stringify(conversation)
+      body: JSON.stringify(conversation),
     });
 
     if (!response.ok) throw new Error("Unable to create conversation");
@@ -129,18 +138,21 @@ export default function FriendsProfile(){
       conversationId: convoId,
       userId: uid,
       joinedAt: Date.now(),
-      isAdmin: uid === userId
+      isAdmin: uid === userId,
     };
 
-    const response = await fetch("http://localhost:8080/conversation-participants", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId
-      },
-      body: JSON.stringify(participant)
-    });
+    const response = await fetch(
+      "http://localhost:8080/conversation-participants",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(participant),
+      }
+    );
 
     if (!response.ok) throw new Error("Unable to add participant");
 
@@ -176,58 +188,71 @@ export default function FriendsProfile(){
   }, [user_id]);
 
   const getMutualsFriends = async () => {
-     const response = await fetch(`http://localhost:8080/friendship/mutual-friends/${user_id}`,{
-      method:"GET",
-      headers:{
-        sessionId:sessionId,
-        userId:userId
+    const response = await fetch(
+      `http://localhost:8080/friendship/mutual-friends/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
       }
-     });
+    );
 
-     if(!response.ok){
-      throw new Error("failed to fetch")
-     }
+    if (!response.ok) {
+      throw new Error("failed to fetch");
+    }
 
-     const mutualResponse = await response.json();
-     setMutualFriends(mutualResponse);
+    const mutualResponse = await response.json();
+    setMutualFriends(mutualResponse);
 
-     console.log(mutualResponse)
-  }
+    console.log(mutualResponse);
+  };
 
   useEffect(() => {
-    getMutualsFriends()
-  },[])
+    getMutualsFriends();
+  }, []);
 
   const getAllFriends = async () => {
-          const response = await fetch(`http://localhost:8080/friendship/friends/${user_id}`,{
-              method:"GET",
-              headers:{
-                  sessionId:sessionId,
-                  userId:userId
-              }
-          });
-  
-          if(!response.ok){
-              throw new Error("failed to fetch friends");
-          }
-  
-          const friendsresponse = await response.json();
-  
-          setFriends(friendsresponse);
-          console.log("friends", friendsresponse);
+    const response = await fetch(
+      `http://localhost:8080/friendship/friends/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
       }
-  
-      useEffect(() => {
-          getAllFriends()
-      },[]);
+    );
 
+    if (!response.ok) {
+      throw new Error("failed to fetch friends");
+    }
+
+    const friendsresponse = await response.json();
+
+    setFriends(friendsresponse);
+    console.log("friends", friendsresponse);
+  };
+
+  useEffect(() => {
+    getAllFriends();
+  }, []);
 
   return (
     <div className="profil-cont">
       <div className="cover-profile">
-        <img src="http://localhost:8080/uploads/1744261726947_beach.jpg" alt="cover" className="cover-image" />
+        <img
+          src="http://localhost:8080/uploads/1744261726947_beach.jpg"
+          alt="cover"
+          className="cover-image"
+        />
         <div className="profile-pic-wrapper">
-          <img src={userDetails?.profile_img_url} alt="profile" className="profile-pic" />
+          <img
+            src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+            alt="profile"
+            className="profile-pic"
+          />
         </div>
       </div>
 
@@ -236,7 +261,9 @@ export default function FriendsProfile(){
           <div className="pro-username-text-1">{userDetails?.name}</div>
           <div className="pro-username-text-2">
             <div>1,120 friends</div>
-            {mutualFriends.length>0 && (<div>{mutualFriends.length} mutual friends</div>)}
+            {mutualFriends.length > 0 && (
+              <div>{mutualFriends.length} mutual friends</div>
+            )}
           </div>
         </div>
         <div className="buttons">
@@ -260,41 +287,73 @@ export default function FriendsProfile(){
       <div className="user-pro-contents">
         {activeTab === "Posts" && (
           <>
-          <div className="user-info">
-                        {about?.workPlace && (<div className="info-display">
-                          <div className="info-display-icon1"><SiWorkplace/></div>
-                          <div className="info-display-content">{about?.workPlace}</div>
-                          </div>)}
-                        {about?.secondarySchool && (<div className="info-display1">
-                          <div className="info-display-icon1"><RiSchoolLine/></div>
-                          <div className="info-display-content">{about?.secondarySchool}</div>
-                          </div>)}
-                        {about?.university && (<div className="info-display1">
-                          <div className="info-display-icon1"><LiaUniversitySolid/></div>
-                          <div className="info-display-content">{about?.university}</div>
-                            </div>)}
-                        {about?.currentCity && (<div className="info-display1">
-                          <div className="info-display-icon1"><IoHomeOutline/></div>
-                          <div className="info-display-content">{about?.currentCity}</div>
-                          </div>)}
-                        {about?.homeTown && (<div className="info-display1">
-                          <div className="info-display-icon1"><CiLocationOn/></div>
-                           <div className="info-display-content">{about?.homeTown}</div>
-                           </div>)}
-                        {about?.relationShipStatus && (<div className="info-display1">
-                          <div className="info-display-icon1"><GiRelationshipBounds/></div>
-                          <div className="info-display-content">{about?.relationShipStatus}</div>
-                            </div>)}
-                      </div>
+            <div className="user-info">
+              {about?.workPlace && (
+                <div className="info-display">
+                  <div className="info-display-icon1">
+                    <SiWorkplace />
+                  </div>
+                  <div className="info-display-content">{about?.workPlace}</div>
+                </div>
+              )}
+              {about?.secondarySchool && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <RiSchoolLine />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.secondarySchool}
+                  </div>
+                </div>
+              )}
+              {about?.university && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <LiaUniversitySolid />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.university}
+                  </div>
+                </div>
+              )}
+              {about?.currentCity && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <IoHomeOutline />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.currentCity}
+                  </div>
+                </div>
+              )}
+              {about?.homeTown && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <CiLocationOn />
+                  </div>
+                  <div className="info-display-content">{about?.homeTown}</div>
+                </div>
+              )}
+              {about?.relationShipStatus && (
+                <div className="info-display1">
+                  <div className="info-display-icon1">
+                    <GiRelationshipBounds />
+                  </div>
+                  <div className="info-display-content">
+                    {about?.relationShipStatus}
+                  </div>
+                </div>
+              )}
+            </div>
 
-          <div className="user-posts">
-            {posts.length === 0 && (
-              <div className="no-posts">No posts Yet</div>
-            )}
-            {posts.map((item) => (
-              <Post postItem={item} key={item.postId} />
-            ))}
-          </div>
+            <div className="user-posts">
+              {posts.length === 0 && (
+                <div className="no-posts">No posts Yet</div>
+              )}
+              {posts.map((item) => (
+                <Post postItem={item} key={item.postId} />
+              ))}
+            </div>
           </>
         )}
 
@@ -304,63 +363,94 @@ export default function FriendsProfile(){
             <div className="about-side2">
               {about?.workPlace && (
                 <div className="info-display">
-                  <div className="info-display-icon"><SiWorkplace /></div>
+                  <div className="info-display-icon">
+                    <SiWorkplace />
+                  </div>
                   <div className="info-display-content">
-                    Works at <span style={{ fontWeight: "bold" }}>{about.workPlace}</span>
+                    Works at{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.workPlace}
+                    </span>
                   </div>
                 </div>
               )}
 
               {about?.secondarySchool && (
                 <div className="info-display">
-                  <div className="info-display-icon"><RiSchoolLine /></div>
+                  <div className="info-display-icon">
+                    <RiSchoolLine />
+                  </div>
                   <div className="info-display-content">
-                    Went to <span style={{ fontWeight: "bold" }}>{about.secondarySchool}</span>
+                    Went to{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.secondarySchool}
+                    </span>
                   </div>
                 </div>
               )}
 
               {about?.university && (
                 <div className="info-display">
-                  <div className="info-display-icon"><LiaUniversitySolid /></div>
+                  <div className="info-display-icon">
+                    <LiaUniversitySolid />
+                  </div>
                   <div className="info-display-content">
-                    Studied at <span style={{ fontWeight: "bold" }}>{about.university}</span>
+                    Studied at{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.university}
+                    </span>
                   </div>
                 </div>
               )}
 
               {about?.currentCity && (
                 <div className="info-display">
-                  <div className="info-display-icon"><IoHomeOutline /></div>
+                  <div className="info-display-icon">
+                    <IoHomeOutline />
+                  </div>
                   <div className="info-display-content">
-                    Lives in <span style={{ fontWeight: "bold" }}>{about.currentCity}</span>
+                    Lives in{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.currentCity}
+                    </span>
                   </div>
                 </div>
               )}
 
               {about?.homeTown && (
                 <div className="info-display">
-                  <div className="info-display-icon"><CiLocationOn /></div>
+                  <div className="info-display-icon">
+                    <CiLocationOn />
+                  </div>
                   <div className="info-display-content">
-                    From <span style={{ fontWeight: "bold" }}>{about.homeTown}</span>
+                    From{" "}
+                    <span style={{ fontWeight: "bold" }}>{about.homeTown}</span>
                   </div>
                 </div>
               )}
 
               {about?.relationShipStatus && (
                 <div className="info-display">
-                  <div className="info-display-icon"><GiRelationshipBounds /></div>
+                  <div className="info-display-icon">
+                    <GiRelationshipBounds />
+                  </div>
                   <div className="info-display-content">
-                    Relationship status <span style={{ fontWeight: "bold" }}>{about.relationShipStatus}</span>
+                    Relationship status{" "}
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.relationShipStatus}
+                    </span>
                   </div>
                 </div>
               )}
 
               {about?.gender && (
                 <div className="info-display">
-                  <div className="info-display-icon"><SiWorkplace /></div>
+                  <div className="info-display-icon">
+                    <SiWorkplace />
+                  </div>
                   <div className="info-display-content">
-                    Gender <span style={{ fontWeight: "bold" }}>{about.gender}</span>
+                    Gender{" "}
+                    <span style={{ fontWeight: "bold" }}>{about.gender}</span>
                   </div>
                 </div>
               )}
@@ -368,24 +458,28 @@ export default function FriendsProfile(){
           </div>
         )}
 
-        {activeTab === "Photos" && <div className="photos-cont">
-              {posts.map((item)=>{
-                return(
-                  <div className="photo">
-                      <img src={item?.imageUrl} className="photo-img"/>
-                  </div>
-                )
-              })}
-          </div>}
-        {activeTab === "Friends" && <div className="frnds-cont">
-              {friends.map((item) => {
-                return(
-                  <Link className="frnd-card" to={`/profile/${item.userId}`}> 
-                  <FriendCard friendItem={item}/>
-                  </Link>
-                )
-              })}
-          </div>}
+        {activeTab === "Photos" && (
+          <div className="photos-cont">
+            {posts.map((item) => {
+              return (
+                <div className="photo">
+                  <img src={item?.imageUrl} className="photo-img" />
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {activeTab === "Friends" && (
+          <div className="frnds-cont">
+            {friends.map((item) => {
+              return (
+                <Link className="frnd-card" to={`/profile/${item.userId}`}>
+                  <FriendCard friendItem={item} />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
