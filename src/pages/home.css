@@ -123,3 +123,41 @@
     gap:14px;
 }
 
+@media screen and (max-width: 768px) {
+    .whole {
+        flex-direction: column;
+        align-items: center;
+    }
+    .side1{
+        width: 90%;
+        height: auto;
+    }
+    .side2{
+        display: none;
+    }
+    .side11{
+       height: 100px
+    }
+    .side12 {
+        height: auto;
+    }
+    .thought{
+        align-items: center;
+    }
+    .thought-cont{
+        height: 70%;
+        font-size: medium;
+    }
+    .pvfl {
+        display: none;
+    }
+    .share-btn{
+        font-size: 70%;
+    }
+    .contents{
+        gap:0;
+        justify-content: end;
+        width:80%;
+        margin-left: 10%;
+    }
+}
