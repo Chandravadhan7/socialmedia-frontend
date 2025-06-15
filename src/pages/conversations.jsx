@@ -21,7 +21,8 @@ export default function Conversations() {
   const [toggle, setToggle] = useState(false);
   const [togglenewgroup, setTogglenewgroup] = useState(false);
   const [showGroupDetails, setShowGroupDetails] = useState(false);
-  const [selectedConversationId, setSelectedConversationId] = useState(initialConvoId);
+  const [selectedConversationId, setSelectedConversationId] =
+    useState(initialConvoId);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
   const [selectedGroupMembers, setSelectedGroupMembers] = useState([]);
   const [groupSubject, setGroupSubject] = useState("");
@@ -30,6 +31,20 @@ export default function Conversations() {
   const [mutualFriends, setMutualFriends] = useState([]);
 
   const navigate = useNavigate();
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 500);
+const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+
+useEffect(() => {
+  const handleResize = () => {
+    const mobile = window.innerWidth <= 500;
+    setIsMobile(mobile);
+    if (!mobile) setIsMobileChatOpen(false);
+  };
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
 
   const selectConversation = (conversationId) => {
     setSelectedConversationId(conversationId);
@@ -69,7 +84,7 @@ export default function Conversations() {
       creatorId: userId,
       title: groupSubject,
     };
-  
+
     const response = await fetch("http://localhost:8080/conversations", {
       method: "POST",
       headers: {
@@ -79,25 +94,25 @@ export default function Conversations() {
       },
       body: JSON.stringify(conversation),
     });
-  
+
     if (!response.ok) {
       console.error("Failed to create group conversation");
       return;
     }
-  
+
     const group = await response.json();
     const allMembers = [...selectedGroupMembers, +userId];
-  
+
     for (const id of allMembers) {
       await addParticipant(group.conversationId, id);
     }
-  
+
     // Delay to ensure conversation is ready
     setTimeout(() => {
       setSelectedConversationId(group.conversationId);
       setSearchParams({ conversationId: group.conversationId });
     }, 100);
-  
+
     // Reset UI
     setToggle(false);
     setTogglenewgroup(false);
@@ -106,7 +121,6 @@ export default function Conversations() {
     setGroupIcon(null);
     setShowGroupDetails(false);
   };
-  
 
   const checkOrCreateConversation = async (friendId) => {
     try {
@@ -114,8 +128,8 @@ export default function Conversations() {
         method: "GET",
         headers: {
           sessionId,
-          userId
-        }
+          userId,
+        },
       });
 
       if (!response.ok) {
@@ -127,19 +141,24 @@ export default function Conversations() {
       let existingConvo = null;
 
       for (const convo of allConversations) {
-        const res = await fetch(`http://localhost:8080/conversation-participants/${convo.conversationId}`, {
-          headers: {
-            sessionId,
-            userId
+        const res = await fetch(
+          `http://localhost:8080/conversation-participants/${convo.conversationId}`,
+          {
+            headers: {
+              sessionId,
+              userId,
+            },
           }
-        });
+        );
 
         if (!res.ok) continue;
 
         const participants = await res.json();
 
-        const isOther = participants.some(p => p.userId === parseInt(friendId));
-        const isSelf = participants.some(p => p.userId === parseInt(userId));
+        const isOther = participants.some(
+          (p) => p.userId === parseInt(friendId)
+        );
+        const isSelf = participants.some((p) => p.userId === parseInt(userId));
 
         if (isOther && isSelf && !convo.isGroup) {
           existingConvo = convo;
@@ -154,7 +173,6 @@ export default function Conversations() {
       }
 
       await createConversation(friendId);
-
     } catch (err) {
       console.error("Error:", err.message);
     }
@@ -164,7 +182,7 @@ export default function Conversations() {
     const conversation = {
       createdAt: Date.now(),
       isGroup: false,
-      creatorId: userId
+      creatorId: userId,
     };
 
     const response = await fetch("http://localhost:8080/conversations", {
@@ -172,9 +190,9 @@ export default function Conversations() {
       headers: {
         "Content-Type": "application/json",
         sessionId,
-        userId
+        userId,
       },
-      body: JSON.stringify(conversation)
+      body: JSON.stringify(conversation),
     });
 
     if (!response.ok) {
@@ -195,18 +213,21 @@ export default function Conversations() {
       conversationId: convoId,
       userId: uid,
       joinedAt: Date.now(),
-      isAdmin: uid === userId
+      isAdmin: uid === userId,
     };
 
-    const response = await fetch("http://localhost:8080/conversation-participants", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId: sessionId,
-        userId: userId
-      },
-      body: JSON.stringify(participant)
-    });
+    const response = await fetch(
+      "http://localhost:8080/conversation-participants",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: sessionId,
+          userId: userId,
+        },
+        body: JSON.stringify(participant),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Unable to add participant");
@@ -238,10 +259,13 @@ export default function Conversations() {
 
   const getMutualsFriends = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/friendship/mutual-friends/${userId}`, {
-        method: "GET",
-        headers: { sessionId, userId }
-      });
+      const response = await fetch(
+        `http://localhost:8080/friendship/mutual-friends/${userId}`,
+        {
+          method: "GET",
+          headers: { sessionId, userId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch mutual friends");
 
@@ -264,7 +288,7 @@ export default function Conversations() {
       if (!resp.ok) throw new Error("failed to fetch conversations");
       const data = await resp.json();
       setConversations(data);
-      console.log(data)
+      console.log(data);
       filterConversationsWithMessages(data);
     } catch (err) {
       console.error(err);
@@ -311,8 +335,9 @@ export default function Conversations() {
     }
   }, [initialConvoId]);
 
-  return (
-    <div className="convo-page">
+  // In your return statement, update the main container:
+return (
+    <div className={`convo-page ${isMobile && isMobileChatOpen ? 'mobile-chat-open' : ''}`}>
       {toggle ? (
         togglenewgroup ? (
           showGroupDetails ? (
@@ -321,7 +346,10 @@ export default function Conversations() {
                 <div className="cpicon">
                   <FaArrowLeftLong onClick={() => setShowGroupDetails(false)} />
                 </div>
-                <div className="cpchat" style={{ fontSize: "150%", lineHeight: "260%" }}>
+                <div
+                  className="cpchat"
+                  style={{ fontSize: "150%", lineHeight: "260%" }}
+                >
                   New Group
                 </div>
               </div>
@@ -341,7 +369,11 @@ export default function Conversations() {
               </div>
               <div className="confirm-btn">
                 <FaCheck
-                  style={{ fontSize: "2rem", color: "green", cursor: "pointer" }}
+                  style={{
+                    fontSize: "2rem",
+                    color: "green",
+                    cursor: "pointer",
+                  }}
                   onClick={createGroup}
                 />
               </div>
@@ -352,7 +384,10 @@ export default function Conversations() {
                 <div className="cpicon">
                   <FaArrowLeftLong onClick={toggleChats} />
                 </div>
-                <div className="cpchat" style={{ fontSize: "150%", lineHeight: "260%" }}>
+                <div
+                  className="cpchat"
+                  style={{ fontSize: "150%", lineHeight: "260%" }}
+                >
                   New Group
                 </div>
               </div>
@@ -398,7 +433,10 @@ export default function Conversations() {
               <div className="cpicon">
                 <FaArrowLeftLong onClick={toggleChats} />
               </div>
-              <div className="cpchat" style={{ fontSize: "150%", lineHeight: "260%" }}>
+              <div
+                className="cpchat"
+                style={{ fontSize: "150%", lineHeight: "260%" }}
+              >
                 New Chat
               </div>
             </div>
@@ -411,7 +449,11 @@ export default function Conversations() {
               </div>
               <div
                 className="cpchat"
-                style={{ fontSize: "120%", lineHeight: "320%", cursor: "pointer" }}
+                style={{
+                  fontSize: "120%",
+                  lineHeight: "320%",
+                  cursor: "pointer",
+                }}
                 onClick={toggleGroup}
               >
                 New Group
@@ -433,36 +475,55 @@ export default function Conversations() {
           </div>
         )
       ) : (
-        <div className="convo-page-side1">
-          <div className="convo-page-side1-title">
-            <div className="cpchat">Chats</div>
-            <div className="cpicon">
-              <RiChatNewLine onClick={toggleChats} />
+        <>
+          {(!isMobile || !isMobileChatOpen) && (
+            <div className="convo-page-side1">
+              <div className="convo-page-side1-title">
+                <div className="cpchat">Chats</div>
+                <div className="cpicon">
+                  <RiChatNewLine onClick={toggleChats} />
+                </div>
+              </div>
+              <div className="convo-page-side1-search">
+                <input placeholder="search conversation" />
+              </div>
+              <div className="convo-page-side1-chats">
+                {filteredConversations.map((item) => (
+                  <Conversation
+                    key={item.conversationId}
+                    conversationId={item.conversationId}
+                    onClick={() => {
+                      selectConversation(item.conversationId);
+                      if (isMobile) setIsMobileChatOpen(true);
+                    }}
+                    isSelected={String(selectedConversationId) === String(item.conversationId)}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="convo-page-side1-search">
-            <input placeholder="search conversation" />
-          </div>
-          <div className="convo-page-side1-chats">
-            {filteredConversations.map((item) => (
-              <Conversation
-                key={item.conversationId}
-                conversationId={item.conversationId}
-                onClick={() => selectConversation(item.conversationId)}
-                isSelected={String(selectedConversationId) === String(item.conversationId)}
-              />
-            ))}
-          </div>
-        </div>
+          )}
+        </>
       )}
 
       {/* ChatBox */}
-      {selectedConversationId && (
-  <>
-    <ChatBox conversationId={selectedConversationId} />
-    {console.log("Rendering ChatBox for conversationId:", selectedConversationId)}
-  </>
-)}
+      {selectedConversationId && (!isMobile || isMobileChatOpen) && (
+        <>
+          {/* Add back button for mobile */}
+          {isMobile && isMobileChatOpen && (
+            <button 
+              className="mobile-back-btn" 
+              onClick={() => setIsMobileChatOpen(false)}
+            >
+              ← Back
+            </button>
+          )}
+          <ChatBox
+            conversationId={selectedConversationId}
+            onBack={() => setIsMobileChatOpen(false)}
+          />
+        </>
+      )}
     </div>
   );
+
 }
