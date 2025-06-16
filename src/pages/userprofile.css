@@ -142,3 +142,9 @@
     scrollbar-width: none; 
     gap:14px;
 }
+@media screen and (max-width: 768px) {
+    .entities{
+      height: 3rem;
+    }
+  
+}

@@ -20,17 +20,20 @@ export default function UserProfile({ user_id }) {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("Posts");
   const [about, setAbout] = useState(null);
-  const [mutualFriends,setMutualFriends] = useState([])
-  let [friends,setFriends] = useState([]);
-  
+  const [mutualFriends, setMutualFriends] = useState([]);
+  let [friends, setFriends] = useState([]);
+
   const getPosts = async () => {
-    const response = await fetch(`http://localhost:8080/post/posts/${user_id}`, {
-      method: "GET",
-      headers: {
-        sessionId,
-        userId
+    const response = await fetch(
+      `http://localhost:8080/post/posts/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId,
+          userId,
+        },
       }
-    });
+    );
 
     if (!response.ok) {
       throw new Error("failed to fetch posts");
@@ -41,13 +44,16 @@ export default function UserProfile({ user_id }) {
   };
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:8080/user/${user_id}`, {
-      method: "GET",
-      headers: {
-        sessionId,
-        userId
+    const response = await fetch(
+      `http://localhost:8080/user/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId,
+          userId,
+        },
       }
-    });
+    );
 
     if (!response.ok) {
       throw new Error("failed to fetch user details");
@@ -66,13 +72,16 @@ export default function UserProfile({ user_id }) {
 
   const checkOrCreateConversation = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/conversations`, {
-        method: "GET",
-        headers: {
-          sessionId,
-          userId
+      const response = await fetch(
+        `http://localhost:8080/conversations`,
+        {
+          method: "GET",
+          headers: {
+            sessionId,
+            userId,
+          },
         }
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch conversations");
@@ -83,19 +92,24 @@ export default function UserProfile({ user_id }) {
       let existingConvo = null;
 
       for (const convo of allConversations) {
-        const res = await fetch(`http://localhost:8080/conversation-participants/${convo.conversationId}`, {
-          headers: {
-            sessionId,
-            userId
+        const res = await fetch(
+          `http://localhost:8080/conversation-participants/${convo.conversationId}`,
+          {
+            headers: {
+              sessionId,
+              userId,
+            },
           }
-        });
+        );
 
         if (!res.ok) continue;
 
         const participants = await res.json();
 
-        const isOther = participants.some(p => p.userId === parseInt(user_id));
-        const isSelf = participants.some(p => p.userId === parseInt(userId));
+        const isOther = participants.some(
+          (p) => p.userId === parseInt(user_id)
+        );
+        const isSelf = participants.some((p) => p.userId === parseInt(userId));
 
         if (isOther && isSelf) {
           existingConvo = convo;
@@ -104,13 +118,14 @@ export default function UserProfile({ user_id }) {
       }
 
       if (existingConvo) {
-        navigate("/chats", { state: { conversationId: existingConvo.conversationId } });
+        navigate("/chats", {
+          state: { conversationId: existingConvo.conversationId },
+        });
         return;
       }
 
       // Otherwise create a new conversation
       await createConversation();
-
     } catch (err) {
       console.error("Error:", err.message);
     }
@@ -120,18 +135,21 @@ export default function UserProfile({ user_id }) {
     const conversation = {
       createdAt: Date.now(),
       isGroup: false,
-      creatorId: userId
+      creatorId: userId,
     };
 
-    const response = await fetch("http://localhost:8080/conversations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId
-      },
-      body: JSON.stringify(conversation)
-    });
+    const response = await fetch(
+      "http://localhost:8080/conversations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(conversation),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Unable to create conversation");
@@ -150,18 +168,21 @@ export default function UserProfile({ user_id }) {
       conversationId: convoId,
       userId: uid,
       joinedAt: Date.now(),
-      isAdmin: uid === userId
+      isAdmin: uid === userId,
     };
 
-    const response = await fetch("http://localhost:8080/conversation-participants", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId
-      },
-      body: JSON.stringify(participant)
-    });
+    const response = await fetch(
+      "http://localhost:8080/conversation-participants",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(participant),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Unable to add participant");
@@ -172,86 +193,95 @@ export default function UserProfile({ user_id }) {
   };
 
   const getBio = async () => {
-      try {
-        const response = await fetch(`http://localhost:8080/bio/${user_id}`, {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/bio/${user_id}`,
+        {
           method: "GET",
           headers: {
             userId: userId,
             sessionId: sessionId,
           },
-        });
-  
-        if (!response.ok) {
-          throw new Error("Failed to fetch bio");
         }
-  
-        const text = await response.text();
-  
-        // If response body is empty, don't parse it as JSON
-        if (!text) {
-          setAbout(null);
-          return;
-        }
-  
-        const bioResponse = JSON.parse(text);
-        setAbout(bioResponse);
-        console.log("Bio:", bioResponse);
-      } catch (error) {
-        console.error("getBio error:", error.message);
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch bio");
       }
-    };
-  
-    useEffect(() => {
-      getBio();
-    }, [userId]);
 
-    const getMutualsFriends = async () => {
-      const response = await fetch(`http://localhost:8080/friendship/mutual-friends/${user_id}`,{
-       method:"GET",
-       headers:{
-         sessionId:sessionId,
-         userId:userId
-       }
-      });
- 
-      if(!response.ok){
-       throw new Error("failed to fetch")
+      const text = await response.text();
+
+      // If response body is empty, don't parse it as JSON
+      if (!text) {
+        setAbout(null);
+        return;
       }
- 
-      const mutualResponse = await response.json();
-      setMutualFriends(mutualResponse);
- 
-      console.log(mutualResponse)
-   }
- 
-   useEffect(() => {
-     getMutualsFriends()
-   },[])
 
-   const getAllFriends = async () => {
-           const response = await fetch(`http://localhost:8080/friendship/friends/${user_id}`,{
-               method:"GET",
-               headers:{
-                   sessionId:sessionId,
-                   userId:userId
-               }
-           });
-   
-           if(!response.ok){
-               throw new Error("failed to fetch friends");
-           }
-   
-           const friendsresponse = await response.json();
-   
-           setFriends(friendsresponse);
-           console.log("friends", friendsresponse);
-       }
-   
-       useEffect(() => {
-           getAllFriends()
-       },[]);
+      const bioResponse = JSON.parse(text);
+      setAbout(bioResponse);
+      console.log("Bio:", bioResponse);
+    } catch (error) {
+      console.error("getBio error:", error.message);
+    }
+  };
 
-   return (
+  useEffect(() => {
+    getBio();
+  }, [userId]);
+
+  const getMutualsFriends = async () => {
+    const response = await fetch(
+      `http://localhost:8080/friendship/mutual-friends/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to fetch");
+    }
+
+    const mutualResponse = await response.json();
+    setMutualFriends(mutualResponse);
+
+    console.log(mutualResponse);
+  };
+
+  useEffect(() => {
+    getMutualsFriends();
+  }, []);
+
+  const getAllFriends = async () => {
+    const response = await fetch(
+      `http://localhost:8080/friendship/friends/${user_id}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("failed to fetch friends");
+    }
+
+    const friendsresponse = await response.json();
+
+    setFriends(friendsresponse);
+    console.log("friends", friendsresponse);
+  };
+
+  useEffect(() => {
+    getAllFriends();
+  }, []);
+
+  return (
     <div className="profil-cont">
       <div className="cover-pro">
         <img
@@ -293,7 +323,7 @@ export default function UserProfile({ user_id }) {
           </div>
         ))}
       </div>
-  
+
       <div className="user-contents">
         {activeTab === "Posts" && (
           <>
@@ -321,7 +351,9 @@ export default function UserProfile({ user_id }) {
                   <div className="info-display-icon1">
                     <LiaUniversitySolid />
                   </div>
-                  <div className="info-display-content">{about?.university}</div>
+                  <div className="info-display-content">
+                    {about?.university}
+                  </div>
                 </div>
               )}
               {about?.currentCity && (
@@ -329,7 +361,9 @@ export default function UserProfile({ user_id }) {
                   <div className="info-display-icon1">
                     <IoHomeOutline />
                   </div>
-                  <div className="info-display-content">{about?.currentCity}</div>
+                  <div className="info-display-content">
+                    {about?.currentCity}
+                  </div>
                 </div>
               )}
               {about?.homeTown && (
@@ -351,18 +385,18 @@ export default function UserProfile({ user_id }) {
                 </div>
               )}
             </div>
-  
+
             <div className="user-posts">
               {posts.length === 0 && (
-              <div className="no-posts">No posts Yet</div>
-            )}
+                <div className="no-posts">No posts Yet</div>
+              )}
               {posts.map((item) => (
                 <Post postItem={item} key={item.postId} />
               ))}
             </div>
           </>
         )}
-  
+
         {activeTab === "About" && (
           <div className="about">
             <div className="about-side1">About</div>
@@ -374,11 +408,13 @@ export default function UserProfile({ user_id }) {
                   </div>
                   <div className="info-display-content">
                     Works at{" "}
-                    <span style={{ fontWeight: "bold" }}>{about.workPlace}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.workPlace}
+                    </span>
                   </div>
                 </div>
               )}
-  
+
               {about?.secondarySchool && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -386,11 +422,13 @@ export default function UserProfile({ user_id }) {
                   </div>
                   <div className="info-display-content">
                     Went to{" "}
-                    <span style={{ fontWeight: "bold" }}>{about.secondarySchool}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.secondarySchool}
+                    </span>
                   </div>
                 </div>
               )}
-  
+
               {about?.university && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -398,11 +436,13 @@ export default function UserProfile({ user_id }) {
                   </div>
                   <div className="info-display-content">
                     Studied at{" "}
-                    <span style={{ fontWeight: "bold" }}>{about.university}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.university}
+                    </span>
                   </div>
                 </div>
               )}
-  
+
               {about?.currentCity && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -410,11 +450,13 @@ export default function UserProfile({ user_id }) {
                   </div>
                   <div className="info-display-content">
                     Lives in{" "}
-                    <span style={{ fontWeight: "bold" }}>{about.currentCity}</span>
+                    <span style={{ fontWeight: "bold" }}>
+                      {about.currentCity}
+                    </span>
                   </div>
                 </div>
               )}
-  
+
               {about?.homeTown && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -426,7 +468,7 @@ export default function UserProfile({ user_id }) {
                   </div>
                 </div>
               )}
-  
+
               {about?.relationShipStatus && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -440,7 +482,7 @@ export default function UserProfile({ user_id }) {
                   </div>
                 </div>
               )}
-  
+
               {about?.gender && (
                 <div className="info-display">
                   <div className="info-display-icon">
@@ -455,27 +497,30 @@ export default function UserProfile({ user_id }) {
             </div>
           </div>
         )}
-  
-        {activeTab === "Photos" && <div className="photos-cont">
-              {posts.map((item)=>{
-                return(
-                  <div className="photo">
-                      <img src={item?.imageUrl} className="photo-img"/>
-                  </div>
-                )
-              })}
-          </div>}
-        {activeTab === "Friends" && <div className="frnds-cont">
-              {friends.map((item) => {
-                return(
-                  <Link className="frnd-card" to={`/profile/${item.userId}`}> 
-                  <FriendCard friendItem={item}/>
-                  </Link>
-                )
-              })}
-          </div>}
+
+        {activeTab === "Photos" && (
+          <div className="photos-cont">
+            {posts.map((item) => {
+              return (
+                <div className="photo">
+                  <img src={item?.imageUrl} className="photo-img" />
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {activeTab === "Friends" && (
+          <div className="frnds-cont">
+            {friends.map((item) => {
+              return (
+                <Link className="frnd-card" to={`/profile/${item.userId}`}>
+                  <FriendCard friendItem={item} />
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
-  
 }
