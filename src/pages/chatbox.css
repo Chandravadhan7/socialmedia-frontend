@@ -178,3 +178,8 @@
     background-color: #3B82F6;
     color: #fff;
 }
+@media screen and (max-width: 768px) {
+    .convo-page-side2{
+        height: 80vh;
+    }
+}
