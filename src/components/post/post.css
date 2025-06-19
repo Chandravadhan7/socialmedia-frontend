@@ -1,5 +1,5 @@
 .whole-cont{
-    height: auto;
+    height: 560px;
     display: flex;
     flex-direction: column;
     background-color: #1F2A3C;
@@ -158,4 +158,13 @@
 
 .dropdown-item:hover {
   background-color: #f5f5f5;
+}
+
+@media screen and (max-width: 500px) {
+    .whole-cont {
+        height: 450px;
+    }
+    .post-cont {
+       min-height: 350px;
+    }
 }
