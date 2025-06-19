@@ -4,31 +4,26 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikes } from "../../pages/fetchLikes";
 import Comment from "../comments/comment";
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { FaRegComment } from "react-icons/fa";
-import ShareIcon from '@mui/icons-material/Share';
+import ShareIcon from "@mui/icons-material/Share";
 import { BsThreeDots } from "react-icons/bs";
-export default function Post({ postItem }) {
+export default function Post({ postItem,likes }) {
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
   const [comments, setCommments] = useState([]);
   const [comment, setComment] = useState("");
   const [showComments, setShowComments] = useState(false);
-  const [userDetails,setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
   const dispatch = useDispatch();
   const postId = postItem?.postId;
-  const likes = useSelector((state) => state.likes);
-
   const getRelativeTime = (epoch) => {
     return formatDistanceToNowStrict(new Date(epoch), { addSuffix: true });
   };
 
-  useEffect(() => {
-    dispatch(fetchLikes());
-  }, [dispatch]);
 
   const handleLike = async () => {
     try {
@@ -128,22 +123,25 @@ export default function Post({ postItem }) {
   };
 
   const getUser = async () => {
-      const response = await fetch(`http://localhost:8080/user/${postItem?.userId}`,{
-          method:"GET",
-          headers:{
-              sessionId:sessionId,
-              userId:userId
-          }
-      });
-
-      if(!response.ok){
-          throw new Error("failed to fetch user details");
+    const response = await fetch(
+      `http://localhost:8080/user/${postItem?.userId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
       }
+    );
 
-      const userResponse = await response.json();
-      setUserDetails(userResponse);
-      console.log(userResponse);
-  }
+    if (!response.ok) {
+      throw new Error("failed to fetch user details");
+    }
+
+    const userResponse = await response.json();
+    setUserDetails(userResponse);
+    console.log(userResponse);
+  };
 
   useEffect(() => {
     getUser();
@@ -175,7 +173,6 @@ export default function Post({ postItem }) {
     alert("Post deleted successfully!");
     window.location.reload(); // Reload the page after deletion
   };
-
 
   return (
     <div className="whole-cont">
@@ -221,24 +218,31 @@ export default function Post({ postItem }) {
 
         <div
           className="post-content"
-          style={hasDescription ? { height: "80%" } : {}}
+          style={hasDescription ? { height: "75%" } : {}}
         >
-          <img src={postItem?.imageUrl} className="post-pro-pic"/></div>
+          <img src={postItem?.imageUrl} className="post-pro-pic" />
+        </div>
 
         <div className="post-lcs">
           <div
             className="post-like"
             onClick={liked ? handledislike : handleLike}
           >
-            {liked ? <FavoriteIcon sx={{color:"red"}}/>: <FavoriteBorderOutlinedIcon/>}
+            {liked ? (
+              <FavoriteIcon sx={{ color: "red" }} />
+            ) : (
+              <FavoriteBorderOutlinedIcon />
+            )}
           </div>
           <div
             className="post-comment"
             onClick={() => setShowComments(!showComments)}
           >
-            <FaRegComment style={{fontSize:"130%"}}/>
+            <FaRegComment style={{ fontSize: "130%" }} />
           </div>
-          <div className="post-share"><ShareIcon/></div>
+          <div className="post-share">
+            <ShareIcon />
+          </div>
         </div>
       </div>
 
@@ -251,11 +255,11 @@ export default function Post({ postItem }) {
           </div>
           <div className="add-comment">
             <div className="pic-cont">
-            <img
-              src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
-              className="post-pro-pic"
-              alt="profile"
-            />
+              <img
+                src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
+                className="post-pro-pic"
+                alt="profile"
+              />
             </div>
             <input
               placeholder="write a comment"
@@ -270,7 +274,8 @@ export default function Post({ postItem }) {
                   window.location.reload();
                 }, 500);
               }}
-             className="comment-btn">
+              className="comment-btn"
+            >
               Post
             </button>
           </div>
