@@ -7,6 +7,9 @@ import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import { Link } from "react-router-dom";
+import { fetchLikes } from "./fetchLikes";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Home() {
   const [file, setFile] = useState(null);
@@ -18,6 +21,7 @@ export default function Home() {
   const [posts, setPosts] = useState([]);
   const [suggestion, setSuggestions] = useState([]);
   const [buttonState, setButtonState] = useState("see more");
+  const dispatch = useDispatch();
 
   const toggleHeight = () => {
     setButtonState(buttonState === "see less" ? "see more" : "see less");
@@ -143,6 +147,11 @@ export default function Home() {
     getSuggestions();
   }, []);
 
+  useEffect(() => {
+    dispatch(fetchLikes());
+  }, [dispatch]);
+  const likes = useSelector((state) => state.likes.likes);
+
   return (
     <div className="whole">
       <div className="side1">
@@ -229,7 +238,7 @@ export default function Home() {
         </div>
         <div className="side12">
           {posts.map((item) => {
-            return <Post postItem={item} />;
+            return <Post postItem={item} likes={likes}/>;
           })}
         </div>
       </div>
