@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./loginpage.css"; // Assuming you have a CSS file for styles
+import { useNavigate } from "react-router-dom";
 import {
   Eye,
   EyeOff,
@@ -16,7 +17,8 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const navigate = useNavigate();
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -25,25 +27,28 @@ export default function LoginPage() {
     let inputobj = { email: email, password: password };
 
     try {
-      const response = await fetch("http://localhost:8080/user/api/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(inputobj),
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/api/login",
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(inputobj),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Login failed. Check your credentials.");
       }
 
       const loginResponse = await response.json();
-      // Note: localStorage is not available in Claude artifacts
-      // In a real app, you would use: localStorage.setItem("sessionId", loginResponse.sessionId);
+      localStorage.setItem('sessionId', loginResponse.sessionId);
+      localStorage.setItem('userId', loginResponse.userId);
       console.log("Login successful:", loginResponse);
 
-      // navigate("/"); - would work with react-router
+      navigate("/"); 
     } catch (error) {
       setError(error.message);
       console.error("Error during login:", error.message);
@@ -169,12 +174,6 @@ export default function LoginPage() {
               <span className="divider-text">or</span>
               <div className="divider-line"></div>
             </div>
-
-            {/* Social login buttons - Removed as per suggestion */}
-            {/* <div className="social-buttons">
-              <button className="google-btn">Continue with Google</button>
-              <button className="facebook-btn">Continue with Facebook</button>
-            </div> */}
 
             {/* Sign up link */}
             <p className="signup-link">
