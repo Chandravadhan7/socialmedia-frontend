@@ -63,7 +63,6 @@ export default function Profile() {
       }
     }
   };
-  
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -103,14 +102,17 @@ export default function Profile() {
     if (location) formData.append("location", location);
 
     try {
-      const response = await fetch("http://localhost:8080/post/createpost", {
-        method: "POST",
-        body: formData,
-        headers: {
-          sessionId: sessionId,
-          userId: userId,
-        },
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/createpost",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            sessionId: sessionId,
+            userId: userId,
+          },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to upload post");
 
@@ -122,13 +124,16 @@ export default function Profile() {
   };
 
   const getPosts = async () => {
-    const response = await fetch(`http://localhost:8080/post/posts/${userId}`, {
-      method: "GET",
-      headers: {
-        sessionId,
-        userId,
-      },
-    });
+    const response = await fetch(
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/posts/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId,
+          userId,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("failed to fetch posts");
@@ -139,13 +144,16 @@ export default function Profile() {
   };
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:8080/user/${userId}`, {
-      method: "GET",
-      headers: {
-        sessionId,
-        userId,
-      },
-    });
+    const response = await fetch(
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId,
+          userId,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("failed to fetch user details");
@@ -166,15 +174,18 @@ export default function Profile() {
     try {
       const payload = { [field]: value };
 
-      const response = await fetch("http://localhost:8080/bio", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          userId: userId,
-          sessionId: sessionId,
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/bio",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            userId: userId,
+            sessionId: sessionId,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to update about info");
       const data = await response.json();
@@ -186,13 +197,16 @@ export default function Profile() {
 
   const getBio = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/bio/${userId}`, {
-        method: "GET",
-        headers: {
-          userId: userId,
-          sessionId: sessionId,
-        },
-      });
+      const response = await fetch(
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/bio/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            userId: userId,
+            sessionId: sessionId,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch bio");
@@ -220,7 +234,7 @@ export default function Profile() {
 
   const getAllFriends = async () => {
     const response = await fetch(
-      `http://localhost:8080/friendship/friends/${userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
       {
         method: "GET",
         headers: {
@@ -245,43 +259,42 @@ export default function Profile() {
   }, []);
 
   const uploadImage = async (file, type, userId) => {
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("userId", userId);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("userId", userId);
 
-  const endpoint =
-    type === "profile"
-      ? "http://localhost:8080/user/update-profile-pic"
-      : "http://localhost:8080/user/update-cover-pic";
+    const endpoint =
+      type === "profile"
+        ? "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/update-profile-pic"
+        : "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/update-cover-pic";
 
-  try {
-    const response = await fetch(endpoint, {
-      method: "PATCH",
-      headers: {
-        sessionId: sessionId,
-        userId: userId,
-      },
-      body: formData,
+    try {
+      const response = await fetch(endpoint, {
+        method: "PATCH",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+        body: formData,
+      });
 
-    });
+      if (!response.ok) {
+        throw new Error(`Failed to upload ${type} picture`);
+      }
 
-    if (!response.ok) {
-      throw new Error(`Failed to upload ${type} picture`);
+      const imageUrl = await response.text();
+      return imageUrl;
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      return null;
     }
-
-    const imageUrl = await response.text(); 
-    return imageUrl;
-  } catch (error) {
-    console.error("Image upload failed:", error);
-    return null;
-  }
-};
+  };
 
   return (
     <div className="profil-cont">
       <div className="cover-profile" style={{ position: "relative" }}>
         <img
-          src={ userDetails?.cover_pic_url}
+          src={userDetails?.cover_pic_url}
           alt="cover"
           className="cover-image"
         />
@@ -435,7 +448,7 @@ export default function Profile() {
                     <div>
                       <CollectionsOutlinedIcon />
                     </div>
-                    <div>Photo</div>
+                    <div className="pvfl">Photo</div>
                   </label>
                   <input
                     id="file-input"
@@ -453,7 +466,7 @@ export default function Profile() {
                     <div>
                       <VideocamOutlinedIcon />
                     </div>
-                    <div>Video</div>
+                    <div className="pvfl">Video</div>
                   </label>
                   <input
                     id="video-input"
@@ -469,7 +482,7 @@ export default function Profile() {
                     style={{ color: "orange" }}
                   >
                     <SentimentSatisfiedOutlinedIcon />
-                    <div>Feeling</div>
+                    <div className="pvfl">Feeling</div>
                   </div>
 
                   <div
@@ -478,7 +491,7 @@ export default function Profile() {
                     style={{ color: "purple" }}
                   >
                     <PlaceOutlinedIcon />
-                    <div>Location</div>
+                    <div className="pvfl">Location</div>
                   </div>
 
                   <button className="share-btn" onClick={handleUpload}>

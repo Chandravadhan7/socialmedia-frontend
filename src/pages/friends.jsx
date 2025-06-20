@@ -32,10 +32,13 @@ export default function Friends() {
 
   const getFriendRequest = async () => {
     try {
-      const response = await fetch("http://localhost:8080/friendship/friendrequests", {
-        method: "GET",
-        headers: { sessionId, userId },
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friendrequests",
+        {
+          method: "GET",
+          headers: { sessionId, userId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch requests");
 
@@ -48,10 +51,13 @@ export default function Friends() {
 
   const getSuggestions = async () => {
     try {
-      const response = await fetch("http://localhost:8080/friendship/suggestions", {
-        method: "GET",
-        headers: { sessionId, userId },
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/suggestions",
+        {
+          method: "GET",
+          headers: { sessionId, userId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch suggestions");
 
@@ -73,13 +79,23 @@ export default function Friends() {
 
     return (
       <div className="friend-cont-side1">
-        <div className="friend-cont-side1-child" style={{ textAlign: "left", fontSize: "180%", lineHeight: "200%" }}>
+        <div
+          className="friend-cont-side1-child"
+          style={{ textAlign: "left", fontSize: "180%", lineHeight: "200%" }}
+        >
           Friends
         </div>
 
-        <div className="friend-cont-side1-child" onClick={() => handleMainNavClick("/friends/homecontent")}>
+        <div
+          className="friend-cont-side1-child"
+          onClick={() => handleMainNavClick("/friends/homecontent")}
+        >
           <div className="f-c-s1-c-icon">
-            <img src="https://i.ibb.co/67HWYXmq/icons8-user-96.png" className="post-pro-pic" alt="profile" />
+            <img
+              src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+              className="post-pro-pic"
+              alt="profile"
+            />
           </div>
           <div className="f-c-s1-c-text">Home</div>
           <div className="f-c-s1-c-arrow">
@@ -87,9 +103,16 @@ export default function Friends() {
           </div>
         </div>
 
-        <div className="friend-cont-side1-child" onClick={() => handleMainNavClick("/friendrequest")}>
+        <div
+          className="friend-cont-side1-child"
+          onClick={() => handleMainNavClick("/friendrequest")}
+        >
           <div className="f-c-s1-c-icon">
-            <img src="https://i.ibb.co/67HWYXmq/icons8-user-96.png" className="post-pro-pic" alt="profile" />
+            <img
+              src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+              className="post-pro-pic"
+              alt="profile"
+            />
           </div>
           <div className="f-c-s1-c-text">Friend Requests</div>
           <div className="f-c-s1-c-arrow">
@@ -97,9 +120,16 @@ export default function Friends() {
           </div>
         </div>
 
-        <div className="friend-cont-side1-child" onClick={() => handleMainNavClick("/suggestions")}>
+        <div
+          className="friend-cont-side1-child"
+          onClick={() => handleMainNavClick("/suggestions")}
+        >
           <div className="f-c-s1-c-icon">
-            <img src="https://i.ibb.co/67HWYXmq/icons8-user-96.png" className="post-pro-pic" alt="profile" />
+            <img
+              src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+              className="post-pro-pic"
+              alt="profile"
+            />
           </div>
           <div className="f-c-s1-c-text">Suggestions</div>
           <div className="f-c-s1-c-arrow">
@@ -107,9 +137,16 @@ export default function Friends() {
           </div>
         </div>
 
-        <div className="friend-cont-side1-child" onClick={() => handleMainNavClick("/friends/list")}>
+        <div
+          className="friend-cont-side1-child"
+          onClick={() => handleMainNavClick("/friends/list")}
+        >
           <div className="f-c-s1-c-icon">
-            <img src="https://i.ibb.co/67HWYXmq/icons8-user-96.png" className="post-pro-pic" alt="profile" />
+            <img
+              src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+              className="post-pro-pic"
+              alt="profile"
+            />
           </div>
           <div className="f-c-s1-c-text">All Friends</div>
           <div className="f-c-s1-c-arrow">
@@ -128,20 +165,25 @@ export default function Friends() {
         return (
           <>
             {isMobile && (
-              <div className="mobile-back-button" onClick={() => navigate("/friends")}>
+              <div
+                className="mobile-back-button"
+                onClick={() => navigate("/friends")}
+              >
                 <ArrowBackIosOutlinedIcon />
                 <span>Back</span>
               </div>
             )}
-                {friendRequests.length > 0 && (
-                  <div className="friend-cont-side21">Friend Requests</div>
-                )}           
-             <div className="friend-cont-side22">
+            {friendRequests.length > 0 && (
+              <div className="friend-cont-side21">Friend Requests</div>
+            )}
+            <div className="friend-cont-side22">
               {friendRequests.map((item) => (
                 <FriendRequestCard key={item.id} item={item} />
               ))}
             </div>
-            {suggestion.length > 0 && (<div className="friend-cont-side21">Suggestions</div>)}
+            {suggestion.length > 0 && (
+              <div className="friend-cont-side21">Suggestions</div>
+            )}
             <div className="friend-cont-side22">
               {suggestion.map((item) => (
                 <SuggestionCard key={item.id} item={item} />
@@ -155,7 +197,10 @@ export default function Friends() {
         return (
           <>
             {isMobile && (
-              <div className="mobile-back-button" onClick={() => navigate("/friends")}>
+              <div
+                className="mobile-back-button"
+                onClick={() => navigate("/friends")}
+              >
                 <ArrowBackIosOutlinedIcon />
                 <span>Back</span>
               </div>
@@ -174,7 +219,10 @@ export default function Friends() {
         return (
           <>
             {isMobile && (
-              <div className="mobile-back-button" onClick={() => navigate("/friends")}>
+              <div
+                className="mobile-back-button"
+                onClick={() => navigate("/friends")}
+              >
                 <ArrowBackIosOutlinedIcon />
                 <span>Back</span>
               </div>
@@ -193,14 +241,19 @@ export default function Friends() {
         return (
           <>
             {isMobile && (
-              <div className="mobile-back-button" onClick={() => navigate("/friends")}>
+              <div
+                className="mobile-back-button"
+                onClick={() => navigate("/friends")}
+              >
                 <ArrowBackIosOutlinedIcon />
                 <span>Back</span>
               </div>
             )}
             <div className="friend-cont-side21">All Friends</div>
             <div className="friend-cont-side22">
-              <p style={{ color: "#fff" }}>All friends list will be displayed here</p>
+              <p style={{ color: "#fff" }}>
+                All friends list will be displayed here
+              </p>
             </div>
           </>
         );

@@ -30,15 +30,18 @@ export default function ChatBox({ conversationId }) {
     replyToMessageId: null,
   };
   const sendMessage = async () => {
-    const response = await fetch("http://localhost:8080/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId: sessionId,
-        userId: userId,
-      },
-      body: JSON.stringify(inputobj),
-    });
+    const response = await fetch(
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: sessionId,
+          userId: userId,
+        },
+        body: JSON.stringify(inputobj),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("unable to send message");
@@ -52,7 +55,7 @@ export default function ChatBox({ conversationId }) {
 
   const getMessages = async () => {
     const response = await fetch(
-      `http://localhost:8080/messages/${conversationId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +83,7 @@ export default function ChatBox({ conversationId }) {
 
   const getParticipants = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversation-participants/${conversationId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -109,13 +112,16 @@ export default function ChatBox({ conversationId }) {
   }, [conversationId]);
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:8080/user/${otherUserId}`, {
-      method: "GET",
-      headers: {
-        sessionId: sessionId,
-        userId: userId,
-      },
-    });
+    const response = await fetch(
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${otherUserId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("failed to fetch user details");
@@ -134,7 +140,7 @@ export default function ChatBox({ conversationId }) {
 
   const getConversation = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversations/${conversationId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -156,7 +162,7 @@ export default function ChatBox({ conversationId }) {
 
   const setLastSeen = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversation-participants/last-seen/${conversationId}/${otherUserId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/last-seen/${conversationId}/${otherUserId}`,
       {
         method: "PATCH",
         headers: {

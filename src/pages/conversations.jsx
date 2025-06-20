@@ -33,18 +33,17 @@ export default function Conversations() {
   const navigate = useNavigate();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 500);
-const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
+  const [isMobileChatOpen, setIsMobileChatOpen] = useState(false);
 
-useEffect(() => {
-  const handleResize = () => {
-    const mobile = window.innerWidth <= 500;
-    setIsMobile(mobile);
-    if (!mobile) setIsMobileChatOpen(false);
-  };
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 500;
+      setIsMobile(mobile);
+      if (!mobile) setIsMobileChatOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const selectConversation = (conversationId) => {
     setSelectedConversationId(conversationId);
@@ -85,15 +84,18 @@ useEffect(() => {
       title: groupSubject,
     };
 
-    const response = await fetch("http://localhost:8080/conversations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId,
-      },
-      body: JSON.stringify(conversation),
-    });
+    const response = await fetch(
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(conversation),
+      }
+    );
 
     if (!response.ok) {
       console.error("Failed to create group conversation");
@@ -124,13 +126,16 @@ useEffect(() => {
 
   const checkOrCreateConversation = async (friendId) => {
     try {
-      const response = await fetch(`http://localhost:8080/conversations`, {
-        method: "GET",
-        headers: {
-          sessionId,
-          userId,
-        },
-      });
+      const response = await fetch(
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations`,
+        {
+          method: "GET",
+          headers: {
+            sessionId,
+            userId,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch conversations");
@@ -142,7 +147,7 @@ useEffect(() => {
 
       for (const convo of allConversations) {
         const res = await fetch(
-          `http://localhost:8080/conversation-participants/${convo.conversationId}`,
+          `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${convo.conversationId}`,
           {
             headers: {
               sessionId,
@@ -185,15 +190,18 @@ useEffect(() => {
       creatorId: userId,
     };
 
-    const response = await fetch("http://localhost:8080/conversations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId,
-      },
-      body: JSON.stringify(conversation),
-    });
+    const response = await fetch(
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(conversation),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Unable to create conversation");
@@ -217,7 +225,7 @@ useEffect(() => {
     };
 
     const response = await fetch(
-      "http://localhost:8080/conversation-participants",
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants",
       {
         method: "POST",
         headers: {
@@ -239,10 +247,13 @@ useEffect(() => {
 
   const getBio = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/bio/${userId}`, {
-        method: "GET",
-        headers: { userId, sessionId },
-      });
+      const response = await fetch(
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/bio/${userId}`,
+        {
+          method: "GET",
+          headers: { userId, sessionId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch bio");
 
@@ -260,7 +271,7 @@ useEffect(() => {
   const getMutualsFriends = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/friendship/mutual-friends/${userId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${userId}`,
         {
           method: "GET",
           headers: { sessionId, userId },
@@ -282,9 +293,12 @@ useEffect(() => {
 
   const getConversations = async () => {
     try {
-      const resp = await fetch("http://localhost:8080/conversations", {
-        headers: { sessionId, userId },
-      });
+      const resp = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+        {
+          headers: { sessionId, userId },
+        }
+      );
       if (!resp.ok) throw new Error("failed to fetch conversations");
       const data = await resp.json();
       setConversations(data);
@@ -299,7 +313,7 @@ useEffect(() => {
     const results = [];
     for (const convo of allConvos) {
       const res = await fetch(
-        `http://localhost:8080/messages/${convo.conversationId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/${convo.conversationId}`,
         { headers: { sessionId, userId } }
       );
       if (!res.ok) continue;
@@ -314,7 +328,7 @@ useEffect(() => {
   const getAllFriends = async () => {
     try {
       const resp = await fetch(
-        `http://localhost:8080/friendship/friends/${userId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
         { headers: { sessionId, userId } }
       );
       if (!resp.ok) throw new Error("failed to fetch friends");
@@ -336,8 +350,10 @@ useEffect(() => {
   }, [initialConvoId]);
 
   // In your return statement, update the main container:
-return (
-    <div className={`convo-page ${isMobile && isMobileChatOpen ? 'mobile-chat-open' : ''}`}>
+  return (
+    <div
+      className={`convo-page ${isMobile && isMobileChatOpen ? "mobile-chat-open" : ""}`}
+    >
       {toggle ? (
         togglenewgroup ? (
           showGroupDetails ? (
@@ -496,7 +512,10 @@ return (
                       selectConversation(item.conversationId);
                       if (isMobile) setIsMobileChatOpen(true);
                     }}
-                    isSelected={String(selectedConversationId) === String(item.conversationId)}
+                    isSelected={
+                      String(selectedConversationId) ===
+                      String(item.conversationId)
+                    }
                   />
                 ))}
               </div>
@@ -510,8 +529,8 @@ return (
         <>
           {/* Add back button for mobile */}
           {isMobile && isMobileChatOpen && (
-            <button 
-              className="mobile-back-btn" 
+            <button
+              className="mobile-back-btn"
               onClick={() => setIsMobileChatOpen(false)}
             >
               ← Back
@@ -525,5 +544,4 @@ return (
       )}
     </div>
   );
-
 }

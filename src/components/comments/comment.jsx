@@ -16,7 +16,7 @@ export default function Comment({ comment }) {
 
   const getReplies = async () => {
     const response = await fetch(
-      `http://localhost:8080/comments/replies/${comment?.commentId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments/replies/${comment?.commentId}`,
       {
         method: "GET",
         headers: {
@@ -40,7 +40,7 @@ export default function Comment({ comment }) {
   const addReply = async () => {
     let inputObj = { content: reply };
     const response = await fetch(
-      `http://localhost:8080/comments/postComment?postId=${comment?.postId}?parentId=${comment?.commentId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments/postComment?postId=${comment?.postId}?parentId=${comment?.commentId}`,
       {
         method: "POST",
         headers: {
@@ -62,7 +62,7 @@ export default function Comment({ comment }) {
 
   const getUser = async () => {
     const response = await fetch(
-      `http://localhost:8080/user/${comment?.userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${comment?.userId}`,
       {
         method: "GET",
         headers: {

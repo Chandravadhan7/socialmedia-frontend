@@ -2,14 +2,17 @@ import { setLikes } from "../store/slices/likesSlices";
 
 export const fetchLikes = () => async (dispatch) => {
   try {
-    const response = await fetch("http://localhost:8080/likes/userLikes", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId: localStorage.getItem("sessionId"),
-        userId: localStorage.getItem("userId"),
-      },
-    });
+    const response = await fetch(
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/likes/userLikes",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: localStorage.getItem("sessionId"),
+          userId: localStorage.getItem("userId"),
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch likes. Status: ${response.status}`);

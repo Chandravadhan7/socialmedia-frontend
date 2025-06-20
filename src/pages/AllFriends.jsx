@@ -14,7 +14,7 @@ export default function AllFriends() {
 
   const getAllFriends = async () => {
     const response = await fetch(
-      `http://localhost:8080/friendship/friends/${userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
       {
         method: "GET",
         headers: {
@@ -50,7 +50,10 @@ export default function AllFriends() {
       {(!isMobileProfileOpen || window.innerWidth > 768) && (
         <div className="friend-cont-side1">
           <div className="friend-cont-side1-child">
-            <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
+            <Link
+              to="/friends"
+              style={{ textDecoration: "none", color: "black" }}
+            >
               <ArrowBackOutlinedIcon
                 style={{
                   fontSize: "30px",
@@ -88,10 +91,16 @@ export default function AllFriends() {
 
       {/* Right Side: User Profile */}
       {selectedUserId && (isMobileProfileOpen || window.innerWidth > 768) && (
-        <div className="friend-cont-side2" style={{ padding: "0", width: "77%" }}>
+        <div
+          className="friend-cont-side2"
+          style={{ padding: "0", width: "77%" }}
+        >
           {/* Mobile Back Button */}
           {isMobileProfileOpen && window.innerWidth <= 768 && (
-            <div className="mobile-back-button" onClick={() => setIsMobileProfileOpen(false)}>
+            <div
+              className="mobile-back-button"
+              onClick={() => setIsMobileProfileOpen(false)}
+            >
               <ArrowBackOutlinedIcon />
               <span>Back to Friends</span>
             </div>

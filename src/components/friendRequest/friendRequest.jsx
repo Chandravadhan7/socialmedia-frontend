@@ -8,7 +8,7 @@ export default function FriendRequest({ requestItem }) {
 
   const acceptFriendRequest = async () => {
     const response = await fetch(
-      `http://localhost:8080/friendship/acceptrequest/${requestItem?.userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/acceptrequest/${requestItem?.userId}`,
       {
         method: "PATCH",
         headers: {
@@ -28,7 +28,7 @@ export default function FriendRequest({ requestItem }) {
 
   const rejectFriendRequest = async () => {
     const response = await fetch(
-      `http://localhost:8080/friendship/rejectrequest/${requestItem?.userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/rejectrequest/${requestItem?.userId}`,
       {
         method: "PATCH",
         headers: {
@@ -48,7 +48,7 @@ export default function FriendRequest({ requestItem }) {
   };
   const getMutualsFriends = async () => {
     const response = await fetch(
-      `http://localhost:8080/friendship/mutual-friends/${requestItem?.userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${requestItem?.userId}`,
       {
         method: "GET",
         headers: {

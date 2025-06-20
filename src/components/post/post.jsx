@@ -9,7 +9,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { FaRegComment } from "react-icons/fa";
 import ShareIcon from "@mui/icons-material/Share";
 import { BsThreeDots } from "react-icons/bs";
-export default function Post({ postItem,likes }) {
+export default function Post({ postItem, likes }) {
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
   const [comments, setCommments] = useState([]);
@@ -24,11 +24,10 @@ export default function Post({ postItem,likes }) {
     return formatDistanceToNowStrict(new Date(epoch), { addSuffix: true });
   };
 
-
   const handleLike = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/likes/post?postId=${postId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/likes/post?postId=${postId}`,
         {
           method: "POST",
           headers: {
@@ -52,7 +51,7 @@ export default function Post({ postItem,likes }) {
   const handledislike = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/likes/post/dislike?postId=${postId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/likes/post/dislike?postId=${postId}`,
         {
           method: "DELETE",
           headers: {
@@ -77,7 +76,7 @@ export default function Post({ postItem,likes }) {
 
   const getComments = async () => {
     const response = await fetch(
-      `http://localhost:8080/comments?postId=${postId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments?postId=${postId}`,
       {
         method: "GET",
         headers: {
@@ -103,7 +102,7 @@ export default function Post({ postItem,likes }) {
   const addComment = async () => {
     let inputobj = { content: comment };
     const response = await fetch(
-      `http://localhost:8080/comments/postcomment?postId=${postId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments/postcomment?postId=${postId}`,
       {
         method: "POST",
         headers: {
@@ -124,7 +123,7 @@ export default function Post({ postItem,likes }) {
 
   const getUser = async () => {
     const response = await fetch(
-      `http://localhost:8080/user/${postItem?.userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${postItem?.userId}`,
       {
         method: "GET",
         headers: {
@@ -155,7 +154,7 @@ export default function Post({ postItem,likes }) {
 
   const deletePost = async () => {
     const response = await fetch(
-      `http://localhost:8080/post/delete-post?postId=${postItem?.postId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/delete-post?postId=${postItem?.postId}`,
       {
         method: "DELETE",
         headers: {

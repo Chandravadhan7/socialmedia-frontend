@@ -15,7 +15,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
 
   const getParticipants = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversation-participants/${conversationId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -41,13 +41,16 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
   }, [conversationId]);
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:8080/user/${otherUserId}`, {
-      method: "GET",
-      headers: {
-        sessionId: sessionId,
-        userId: userId,
-      },
-    });
+    const response = await fetch(
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${otherUserId}`,
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch user details");
@@ -65,7 +68,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
 
   const getConversation = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversations/${conversationId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -90,7 +93,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
   const getUnseenMessage = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/messages/latest-unseen-message/${conversationId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/latest-unseen-message/${conversationId}`,
         {
           method: "GET",
           headers: {
@@ -116,7 +119,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
   const getLatestMessages = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8080/messages/latest-message/${conversationId}`,
+        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/latest-message/${conversationId}`,
         {
           method: "GET",
           headers: {
@@ -148,7 +151,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
 
   const setLastSeen = async () => {
     const response = await fetch(
-      `http://localhost:8080/conversation-participants/last-seen/${conversationId}/${userId}`,
+      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/last-seen/${conversationId}/${userId}`,
       {
         method: "PATCH",
         headers: {
@@ -159,7 +162,7 @@ export default function Conversation({ conversationId, onClick, isSelected }) {
     );
 
     if (response.ok) {
-      setUnseenMessage([]); 
+      setUnseenMessage([]);
     }
   };
 

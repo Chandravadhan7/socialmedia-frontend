@@ -68,14 +68,17 @@ export default function Home() {
     if (location) formData.append("location", location);
 
     try {
-      const response = await fetch("http://localhost:8080/post/createpost", {
-        method: "POST",
-        body: formData,
-        headers: {
-          sessionId: sessionId,
-          userId: userId,
-        },
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/createpost",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            sessionId: sessionId,
+            userId: userId,
+          },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to upload post");
 
@@ -93,13 +96,16 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch("http://localhost:8080/post/feed", {
-        method: "GET",
-        headers: {
-          sessionId: sessionId,
-          userId: userId,
-        },
-      });
+      const response = await fetch(
+        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/feed",
+        {
+          method: "GET",
+          headers: {
+            sessionId: sessionId,
+            userId: userId,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -123,7 +129,7 @@ export default function Home() {
 
   const getSuggestions = async () => {
     const response = await fetch(
-      "http://localhost:8080/friendship/suggestions",
+      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/suggestions",
       {
         method: "GET",
         headers: {
@@ -217,7 +223,7 @@ export default function Home() {
               onClick={handleFeelingClick}
               style={{ color: "orange" }}
             >
-              😊 
+              😊
               <div className="pvfl">Feeling</div>
             </div>
 
@@ -238,7 +244,7 @@ export default function Home() {
         </div>
         <div className="side12">
           {posts.map((item) => {
-            return <Post postItem={item} likes={likes}/>;
+            return <Post postItem={item} likes={likes} />;
           })}
         </div>
       </div>
