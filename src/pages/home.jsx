@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { fetchLikes } from "./fetchLikes";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [file, setFile] = useState(null);
@@ -22,6 +23,7 @@ export default function Home() {
   const [suggestion, setSuggestions] = useState([]);
   const [buttonState, setButtonState] = useState("see more");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleHeight = () => {
     setButtonState(buttonState === "see less" ? "see more" : "see less");
@@ -45,6 +47,30 @@ export default function Home() {
       }
     }
   };
+  const fetchwithauth = async () => {
+    let sessionKey = localStorage.getItem("sessionId");
+    const response = await fetch(
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/api/validate",
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId: sessionKey,
+        },
+      }
+    );
+    if (!response.ok) {
+      alert("session expired.Please login again");
+      navigate("/login");
+      localStorage.removeItem("sessionId");
+      localStorage.removeItem("userId");
+    }
+  };
+
+  useEffect(() => {
+    fetchwithauth();
+  }, []);
 
   const handleFeelingClick = () => {
     setContent("feeling");
@@ -69,7 +95,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/createpost",
+        "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/post/createpost",
         {
           method: "POST",
           body: formData,
@@ -97,7 +123,7 @@ export default function Home() {
       }
 
       const response = await fetch(
-        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/feed",
+        "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/post/feed",
         {
           method: "GET",
           headers: {
@@ -129,7 +155,7 @@ export default function Home() {
 
   const getSuggestions = async () => {
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/suggestions",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/suggestions",
       {
         method: "GET",
         headers: {
