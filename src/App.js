@@ -11,6 +11,8 @@ import UserProfile from './pages/userprofile';
 import Conversations from './pages/conversations';
 import FriendsProfile from './pages/profilepage';
 import Profile from './pages/profile';
+import SignUp from './pages/signUp';
+import ProtectedRoute from './components/protectedRoute';
 
 export default function App(){
   return(
@@ -18,7 +20,8 @@ export default function App(){
       <Header/>
        <Routes>
         <Route path="/login" element={<LoginPage/>}/>
-        <Route path="/*" element={<Home/>}/>
+        <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/*" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
         <Route path="/friends" element={<Friends/>}/>
         <Route path="/friendrequest" element={<FriendRequestPage/>}/>
         <Route path="/suggestions" element={<SuggestionsPage/>}/>
@@ -27,6 +30,7 @@ export default function App(){
         <Route path="/chats" element={<Conversations/>}/>
         <Route path="/profile/:user_id" element={<FriendsProfile/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/friends/homecontent" element={<Friends />} />
        </Routes>
 
     </div>
