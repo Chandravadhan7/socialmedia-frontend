@@ -9,9 +9,10 @@
     width:20%;
 }
 .Afri-pic{
-    width:100%;
-    height: 100%;
+    width:90%;
+    height: 90%;
     object-fit: contain;
+    border-radius: 50%;
 }
 .Afri-name{
     width:75%;
@@ -26,4 +27,16 @@
     height: 40%;
     /* border: 1px solid green; */
     font-size: 130%;
+}
+.selected-text {
+  color: #050505; /* Tailwind blue-700 */
+}
+
+.mutual-text {
+  font-size: 80%;
+  color: #3B82F6; /* Default color */
+}
+
+.selected-mutual {
+  color: #60A5FA; /* Lighter blue when selected */
 }

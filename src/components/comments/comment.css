@@ -1,132 +1,139 @@
+/* comment.css */
+.whole-cont1{
+  display: flex;
+  flex-direction: column;
+  background-color: #1F2A3C;
+  color: #fff;
+
+}
 .comment-cont {
-    /* border: 1px solid red; */
-    display: flex;
-    /* min-height: 90px; */
-    height: auto;
-    gap: 2%;
+  display: flex;
+  gap: 2%;
+  margin-bottom: 10px;
 }
 
 .comment-cont-s1 {
-    width: 10%;
-    /* border: 1px solid black;  */
-    flex-grow: 1; /* Allow it to grow */
+  width: 10%;
+  flex-shrink: 0;
 }
 
 .comment-cont-s1-img-cont {
-    height: 45px;
-    width: 100%;
-    /* border: 1px solid black;  */
+  height: 45px;
+  width: 45px;
 }
 
 .comment-cont-s2 {
-    width: 88%;
-    display: flex;
-    flex-direction: column;
-    /* border: 1px solid blue; */
-    flex-grow: 1; 
-    gap: 3%;
-    height: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .comment-cont-s2-1 {
-    width: fit-content;
-    max-width: 95%;
-    display: flex;
-    flex-direction: column;
-    /* border: 1px solid black; */
-    margin-top: 1%;
-    border-radius: 5px;
-    padding: 6px 6px 6px 8px;
-    background-color: #213450;
-    gap:5px;
+  max-width: 100%;
+  background-color: #213450;
+  border-radius: 5px;
+  padding: 6px 8px;
+  word-wrap: break-word;
 }
 
 .comm-username {
-    width: 100%;
-    height: 18px;
-    /* border: 1px solid black; */
-    display: flex;
-    gap:5%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.com-time {
+  font-size: 0.7rem;
+  color: gray;
 }
 
 .comm-content {
-    width: 100%;
-    min-height: 26px; /* Ensures minimum height */
-    max-width: 100%; /* Prevents text overflow */
-    /* border: 1px solid red; */
-    word-wrap: break-word; /* Breaks long words */
-    overflow-wrap: break-word; /* Ensures proper wrapping */
-    white-space: pre-wrap; /* Maintains formatting */
-    display: block;
-    /* padding: 5px;  */
-    text-align: left;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  text-align: left;
 }
 
 .comment-cont-s2-2 {
-    width: 98%;
-    height: auto; /* Allows it to expand */
-    min-height: 10px;
-    /* border: 1px solid black; */
-    display: flex;
-    gap:2%;
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #ccc;
 }
-.com-time {
-    font-size: 0.7rem;
-    width:70px;
-    margin-left: auto; /* pushes it to the right */
-    text-align: right;
-    color: gray; /* optional */
+
+.com-reply {
+  cursor: pointer;
 }
-.com-like{
-    font-size: 80%;
+
+.reply-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+  margin-left: 5%;
+  border-left: 2px solid #374151;
+  padding-left: 10px;
 }
-.com-reply{
-    font-size: 80%;
+
+.reply-child {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
-.reply-section{
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    border-top: 1px solid gray;
+
+.reply-child::-webkit-scrollbar {
+  width: 6px;
 }
-.reply-child{
-    height:75%;
-    /* border: 1px solid blue; */
-    overflow: scroll;
-    display: flex;
-    flex-direction: column ;
-    gap: 6%;
-    scrollbar-width: none;
-    margin-left: 5%;
+.reply-child::-webkit-scrollbar-thumb {
+  background: #4B5563;
+  border-radius: 3px;
 }
-.add-reply{
-    /* border: 1px solid yellow; */
-    display: flex;
-    gap:2%;
-    align-items: center;
-    margin-left: 5%;
-    height: 50px;
-    margin-top: 3%;
+
+.add-reply {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.reply-pic-cont{
-    width:10%;
-    height: 100%;
-    /* border: 1px solid black; */
+
+.add-reply .pic-cont {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  overflow: hidden;
 }
-.reply-bar{
-    width:75%;
-    height: 80%;
+
+.comment-bar {
+  flex: 1;
+  height: 36px;
+  border-radius: 20px;
+  border: 1px solid #374151;
+  padding: 0 16px;
+  background-color: #1F2A3C;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
 }
-.reply-btn{
-    width:10%;
-    background-color: #3B82F6;
-    height: 50%;
-    margin-right: 2%;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
+
+.reply-btn {
+  height: 36px;
+  padding: 0 16px;
+  background-color: #3B82F6;
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
 }
+
+.reply-btn:hover {
+  background-color: #2563EB;
+}
+
 .d-none {
-    display: none;
-  }
+  display: none;
+}
