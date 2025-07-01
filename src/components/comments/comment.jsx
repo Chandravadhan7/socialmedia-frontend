@@ -16,7 +16,7 @@ export default function Comment({ comment }) {
 
   const getReplies = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments/replies/${comment?.commentId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/comments/replies/${comment?.commentId}`,
       {
         method: "GET",
         headers: {
@@ -40,7 +40,7 @@ export default function Comment({ comment }) {
   const addReply = async () => {
     let inputObj = { content: reply };
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/comments/postComment?postId=${comment?.postId}?parentId=${comment?.commentId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/comments/postComment?postId=${comment?.postId}&parentId=${comment?.commentId}`,
       {
         method: "POST",
         headers: {
@@ -55,14 +55,13 @@ export default function Comment({ comment }) {
       throw new Error("failed to add reply");
     }
     const replyResponse = await response.json();
-    // Add new reply to the existing list.
     setReplies([...replies, replyResponse]);
     setReply("");
   };
 
   const getUser = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${comment?.userId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/${comment?.userId}`,
       {
         method: "GET",
         headers: {
@@ -86,7 +85,7 @@ export default function Comment({ comment }) {
   }, []);
 
   return (
-    <div className="whole-cont">
+    <div className="whole-cont1">
       <div className="comment-cont">
         <div className="comment-cont-s1">
           <div className="comment-cont-s1-img-cont">
@@ -120,7 +119,6 @@ export default function Comment({ comment }) {
             </div>
           </div>
         </div>
-        {/* Render replies and reply input when showReplies is true */}
       </div>
       {showReplies && (
         <div className="reply-section">

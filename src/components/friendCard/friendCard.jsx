@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import "./friendCard.css";
-export default function FriendCard({ friendItem, onClick }) {
+
+export default function FriendCard({ friendItem, onClick, isSelected }) {
   const [mutualFriends, setMutualFriends] = useState([]);
   const sessionId = localStorage.getItem("sessionId");
   const userId = localStorage.getItem("userId");
+
   const getMutualsFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${friendItem?.userId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/mutual-friends/${friendItem?.userId}`,
       {
         method: "GET",
         headers: {
@@ -22,22 +24,23 @@ export default function FriendCard({ friendItem, onClick }) {
 
     const mutualResponse = await response.json();
     setMutualFriends(mutualResponse);
-
-    console.log(mutualResponse);
   };
 
   useEffect(() => {
     getMutualsFriends();
   }, []);
+
   return (
     <div className="AFri" onClick={onClick}>
       <div className="Afri-pic-cont">
         <img src={friendItem?.profile_img_url} className="Afri-pic" />
       </div>
       <div className="Afri-name">
-        <div className="Afri-name-text">{friendItem?.name}</div>
+        <div className={`Afri-name-text ${isSelected ? "selected-text" : ""}`}>
+          {friendItem?.name}
+        </div>
         {mutualFriends.length > 0 && (
-          <div style={{ fontSize: "80%", color: "#3B82F6" }}>
+          <div className={`mutual-text ${isSelected ? "selected-mutual" : ""}`}>
             {mutualFriends.length} mutual Friends
           </div>
         )}
