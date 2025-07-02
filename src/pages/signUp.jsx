@@ -40,7 +40,7 @@ const Signup = () => {
     setMessage('');
 
     try {
-      const response = await fetch('/user/api/signup', {
+      const response = await fetch('http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

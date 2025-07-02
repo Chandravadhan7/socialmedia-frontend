@@ -31,7 +31,7 @@ export default function ChatBox({ conversationId }) {
   };
   const sendMessage = async () => {
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/messages",
       {
         method: "POST",
         headers: {
@@ -55,7 +55,7 @@ export default function ChatBox({ conversationId }) {
 
   const getMessages = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/${conversationId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/messages/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -83,7 +83,7 @@ export default function ChatBox({ conversationId }) {
 
   const getParticipants = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${conversationId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -113,7 +113,7 @@ export default function ChatBox({ conversationId }) {
 
   const getUser = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${otherUserId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/${otherUserId}`,
       {
         method: "GET",
         headers: {
@@ -140,7 +140,7 @@ export default function ChatBox({ conversationId }) {
 
   const getConversation = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations/${conversationId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations/${conversationId}`,
       {
         method: "GET",
         headers: {
@@ -162,7 +162,7 @@ export default function ChatBox({ conversationId }) {
 
   const setLastSeen = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/last-seen/${conversationId}/${otherUserId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants/last-seen/${conversationId}/${otherUserId}`,
       {
         method: "PATCH",
         headers: {
@@ -241,7 +241,7 @@ export default function ChatBox({ conversationId }) {
             </div>
             <div className="convo-img-cont">
               <img
-                src={"https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
+                src={userDetails?.profile_img_url || "https://i.ibb.co/67HWYXmq/icons8-user-96.png"}
                 className="convo-page-side2-user-pic-img"
               />
               <div style={{ fontSize: "180%", color: "#fff" }}>

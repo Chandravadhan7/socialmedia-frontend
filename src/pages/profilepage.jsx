@@ -26,7 +26,7 @@ export default function FriendsProfile() {
 
   const getPosts = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/post/posts/${user_id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/post/posts/${user_id}`,
       {
         method: "GET",
         headers: { sessionId, userId },
@@ -40,10 +40,13 @@ export default function FriendsProfile() {
   };
 
   const getUser = async () => {
-    const response = await fetch(`http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/${user_id}`, {
-      method: "GET",
-      headers: { sessionId, userId },
-    });
+    const response = await fetch(
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/${user_id}`,
+      {
+        method: "GET",
+        headers: { sessionId, userId },
+      }
+    );
 
     if (!response.ok) throw new Error("failed to fetch user details");
 
@@ -60,10 +63,13 @@ export default function FriendsProfile() {
 
   const checkOrCreateConversation = async () => {
     try {
-      const response = await fetch(`http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations`, {
-        method: "GET",
-        headers: { sessionId, userId },
-      });
+      const response = await fetch(
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations`,
+        {
+          method: "GET",
+          headers: { sessionId, userId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch conversations");
 
@@ -72,7 +78,7 @@ export default function FriendsProfile() {
 
       for (const convo of allConversations) {
         const res = await fetch(
-          `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${convo.conversationId}`,
+          `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants/${convo.conversationId}`,
           {
             headers: { sessionId, userId },
           }
@@ -113,15 +119,18 @@ export default function FriendsProfile() {
       creatorId: userId,
     };
 
-    const response = await fetch("http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        sessionId,
-        userId,
-      },
-      body: JSON.stringify(conversation),
-    });
+    const response = await fetch(
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          sessionId,
+          userId,
+        },
+        body: JSON.stringify(conversation),
+      }
+    );
 
     if (!response.ok) throw new Error("Unable to create conversation");
 
@@ -142,7 +151,7 @@ export default function FriendsProfile() {
     };
 
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants",
       {
         method: "POST",
         headers: {
@@ -162,10 +171,13 @@ export default function FriendsProfile() {
 
   const getBio = async () => {
     try {
-      const response = await fetch(`http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/bio/${user_id}`, {
-        method: "GET",
-        headers: { userId, sessionId },
-      });
+      const response = await fetch(
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/bio/${user_id}`,
+        {
+          method: "GET",
+          headers: { userId, sessionId },
+        }
+      );
 
       if (!response.ok) throw new Error("Failed to fetch bio");
 
@@ -189,7 +201,7 @@ export default function FriendsProfile() {
 
   const getMutualsFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${user_id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/mutual-friends/${user_id}`,
       {
         method: "GET",
         headers: {
@@ -215,7 +227,7 @@ export default function FriendsProfile() {
 
   const getAllFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${user_id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/friends/${user_id}`,
       {
         method: "GET",
         headers: {
@@ -243,13 +255,13 @@ export default function FriendsProfile() {
     <div className="profil-cont">
       <div className="cover-profile">
         <img
-          src="http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/uploads/1744261726947_beach.jpg"
+          src={userDetails?.cover_pic_url}
           alt="cover"
           className="cover-image"
         />
         <div className="profile-pic-wrapper">
           <img
-            src="https://i.ibb.co/67HWYXmq/icons8-user-96.png"
+            src={userDetails?.profile_img_url}
             alt="profile"
             className="profile-pic"
           />

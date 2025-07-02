@@ -14,7 +14,7 @@ export default function AllFriends() {
 
   const getAllFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
       {
         method: "GET",
         headers: {
@@ -91,10 +91,7 @@ export default function AllFriends() {
 
       {/* Right Side: User Profile */}
       {selectedUserId && (isMobileProfileOpen || window.innerWidth > 768) && (
-        <div
-          className="friend-cont-side2"
-          style={{ padding: "0", width: "77%" }}
-        >
+        <div className="friend-cont-side2">
           {/* Mobile Back Button */}
           {isMobileProfileOpen && window.innerWidth <= 768 && (
             <div

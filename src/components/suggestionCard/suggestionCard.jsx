@@ -9,7 +9,7 @@ export default function SuggestionCard({ item }) {
 
   const sendFriendRequest = async (id) => {
     await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friendrequest/${id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/friendrequest/${id}`,
       {
         method: "POST",
         headers: { userId: userId, sessionId: sessionId },
@@ -21,7 +21,7 @@ export default function SuggestionCard({ item }) {
 
   const cancelFriendRequest = async (id) => {
     await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/cancelrequest/${id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/cancelrequest/${id}`,
       {
         method: "DELETE",
         headers: { userId: userId, sessionId: sessionId },
@@ -37,7 +37,7 @@ export default function SuggestionCard({ item }) {
 
   const getMutualsFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${item?.userId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/mutual-friends/${item?.userId}`,
       {
         method: "GET",
         headers: {

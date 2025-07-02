@@ -8,7 +8,7 @@ export default function Suggestion({ suggestedItem }) {
 
   const getMutualsFriends = async () => {
     const response = await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${suggestedItem?.userId}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/mutual-friends/${suggestedItem?.userId}`,
       {
         method: "GET",
         headers: {
@@ -35,7 +35,7 @@ export default function Suggestion({ suggestedItem }) {
   useEffect(() => {
     const fetchPendingRequests = async () => {
       const response = await fetch(
-        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/pending-requests",
+        "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/pending-requests",
         {
           method: "GET",
           headers: { userId: userId, sessionId: sessionId },
@@ -59,7 +59,7 @@ export default function Suggestion({ suggestedItem }) {
 
   const sendFriendRequest = async (id) => {
     await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friendrequest/${id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/friendrequest/${id}`,
       {
         method: "POST",
         headers: { userId: userId, sessionId: sessionId },
@@ -71,7 +71,7 @@ export default function Suggestion({ suggestedItem }) {
 
   const cancelFriendRequest = async (id) => {
     await fetch(
-      `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/cancelrequest/${id}`,
+      `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/cancelrequest/${id}`,
       {
         method: "DELETE",
         headers: { userId: userId, sessionId: sessionId },

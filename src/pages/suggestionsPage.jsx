@@ -13,13 +13,16 @@ export default function SuggestionsPage() {
   const userId = localStorage.getItem("userId");
 
   const getSuggestions = async () => {
-    const response = await fetch("http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/suggestions", {
-      method: "GET",
-      headers: {
-        sessionId: sessionId,
-        userId: userId,
-      },
-    });
+    const response = await fetch(
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/suggestions",
+      {
+        method: "GET",
+        headers: {
+          sessionId: sessionId,
+          userId: userId,
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -47,7 +50,10 @@ export default function SuggestionsPage() {
       {(!isMobileProfileOpen || window.innerWidth > 768) && (
         <div className="friend-cont-side1">
           <div className="friend-cont-side1-child">
-            <Link to="/friends" style={{ textDecoration: "none", color: "black" }}>
+            <Link
+              to="/friends"
+              style={{ textDecoration: "none", color: "black" }}
+            >
               <ArrowBackOutlinedIcon
                 style={{
                   fontSize: "30px",
@@ -72,9 +78,12 @@ export default function SuggestionsPage() {
       )}
 
       {selectedUserId && (isMobileProfileOpen || window.innerWidth > 768) && (
-        <div className="friend-cont-side2" >
+        <div className="friend-cont-side2">
           {isMobileProfileOpen && window.innerWidth <= 768 && (
-            <div className="mobile-back-button" onClick={() => setIsMobileProfileOpen(false)}>
+            <div
+              className="mobile-back-button"
+              onClick={() => setIsMobileProfileOpen(false)}
+            >
               <ArrowBackOutlinedIcon />
               <span>Back to Suggestions</span>
             </div>

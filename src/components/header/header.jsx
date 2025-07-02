@@ -91,7 +91,7 @@ export default function Header() {
       <div className="header1">
         <div className="header11">
           <Link to="/" className="head-logo">
-            SocialHub
+            FriendSphere 
           </Link>
           {!isMobile && (
             <div className="head-search">

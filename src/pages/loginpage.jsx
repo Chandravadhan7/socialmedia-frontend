@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -28,7 +28,7 @@ export default function LoginPage() {
 
     try {
       const response = await fetch(
-        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/user/api/login",
+        "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/user/api/login",
         {
           method: "POST",
           credentials: "include",
@@ -44,11 +44,11 @@ export default function LoginPage() {
       }
 
       const loginResponse = await response.json();
-      localStorage.setItem('sessionId', loginResponse.sessionId);
-      localStorage.setItem('userId', loginResponse.userId);
+      localStorage.setItem("sessionId", loginResponse.sessionId);
+      localStorage.setItem("userId", loginResponse.userId);
       console.log("Login successful:", loginResponse);
 
-      navigate("/"); 
+      navigate("/");
     } catch (error) {
       setError(error.message);
       console.error("Error during login:", error.message);
@@ -178,7 +178,7 @@ export default function LoginPage() {
             {/* Sign up link */}
             <p className="signup-link">
               Don't have an account?{" "}
-              <a href="#" className="signup-link-anchor">
+              <a href="/signup" className="signup-link-anchor">
                 Sign up
               </a>
             </p>

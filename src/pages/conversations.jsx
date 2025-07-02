@@ -85,7 +85,7 @@ export default function Conversations() {
     };
 
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations",
       {
         method: "POST",
         headers: {
@@ -127,7 +127,7 @@ export default function Conversations() {
   const checkOrCreateConversation = async (friendId) => {
     try {
       const response = await fetch(
-        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations`,
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations`,
         {
           method: "GET",
           headers: {
@@ -147,7 +147,7 @@ export default function Conversations() {
 
       for (const convo of allConversations) {
         const res = await fetch(
-          `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants/${convo.conversationId}`,
+          `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants/${convo.conversationId}`,
           {
             headers: {
               sessionId,
@@ -191,7 +191,7 @@ export default function Conversations() {
     };
 
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations",
       {
         method: "POST",
         headers: {
@@ -225,7 +225,7 @@ export default function Conversations() {
     };
 
     const response = await fetch(
-      "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversation-participants",
+      "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversation-participants",
       {
         method: "POST",
         headers: {
@@ -248,7 +248,7 @@ export default function Conversations() {
   const getBio = async () => {
     try {
       const response = await fetch(
-        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/bio/${userId}`,
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/bio/${userId}`,
         {
           method: "GET",
           headers: { userId, sessionId },
@@ -271,7 +271,7 @@ export default function Conversations() {
   const getMutualsFriends = async () => {
     try {
       const response = await fetch(
-        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/mutual-friends/${userId}`,
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/mutual-friends/${userId}`,
         {
           method: "GET",
           headers: { sessionId, userId },
@@ -294,7 +294,7 @@ export default function Conversations() {
   const getConversations = async () => {
     try {
       const resp = await fetch(
-        "http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/conversations",
+        "http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/conversations",
         {
           headers: { sessionId, userId },
         }
@@ -313,7 +313,7 @@ export default function Conversations() {
     const results = [];
     for (const convo of allConvos) {
       const res = await fetch(
-        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/messages/${convo.conversationId}`,
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/messages/${convo.conversationId}`,
         { headers: { sessionId, userId } }
       );
       if (!res.ok) continue;
@@ -328,7 +328,7 @@ export default function Conversations() {
   const getAllFriends = async () => {
     try {
       const resp = await fetch(
-        `http://ec2-51-21-182-252.eu-north-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
+        `http://ec2-13-203-205-26.ap-south-1.compute.amazonaws.com:8080/friendship/friends/${userId}`,
         { headers: { sessionId, userId } }
       );
       if (!resp.ok) throw new Error("failed to fetch friends");
@@ -482,7 +482,14 @@ export default function Conversations() {
                   friendItem={item}
                   onClick={async () => {
                     setSelectedFriendId(item.userId);
-                    await checkOrCreateConversation(item.userId);
+                    if (!isMobile) {
+                      await checkOrCreateConversation(item.userId);
+                    } else {
+                      setTimeout(async () => {
+                        await checkOrCreateConversation(item.userId);
+                        setIsMobileChatOpen(true); // explicitly open chat after small delay
+                      }, 100); // 100ms lets CSS apply
+                    }
                   }}
                   isSelected={selectedFriendId === item.userId}
                 />
